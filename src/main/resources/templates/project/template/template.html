@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+			<div class="col-sm-12">
+				<div class="ibox">
+					<div class="ibox-body">
+						<div class="fixed-table-toolbar">
+							<div class="columns pull-left">
+								<button shiro:hasPermission="project:template:add" type="button"
+									class="btn  btn-primary" onclick="add()">
+									<i class="fa fa-plus hidden" aria-hidden="true"></i>添加
+								</button>
+								<button shiro:hasPermission="project:template:batchRemove" type="button"
+									class="btn  btn-danger" onclick="batchRemove()">
+									<i class="fa fa-trash hidden" aria-hidden="true"></i>删除
+								</button>
+							</div>
+							<div class="columns pull-right">
+								<div class="row">
+									<div style="display:inline" nopadding>
+										<select class='dropdown bootstrap-select' data-live-search="true" id='region' name='region'
+												style="width:150px;height:33px;">
+											<option value="N" selected>请选择地域</option>
+											<option value="XA">西安</option>
+											<option value="BJ">北京</option>
+										</select>
+									</div>
+									<div style="display:inline" nopadding >
+										<input id="pName" name="pName" list="select_code" placeholder="输入或者列表选择" value="" style="width:150px;height:33px;"/>
+										<datalist id="select_code" class="select_code" style="width: 100%;">
+										</datalist>
+									</div>
+									<div style="display:inline" nopadding>
+										<select class='dropdown bootstrap-select' data-live-search="true" id='effectMonth' name='effectMonth'
+												style="width:150px;height:33px;">
+										</select>
+									</div>
+									<div  style="display:inline" >
+										<button  class="btn btn-success"style="height: 35px"  onclick="reLoad()">查询</button>
+									</div>
+								</div>
+							</div>
+
+						<table id="exampleTable" data-mobile-responsive="true" style="table-layout: fixed;"></table>
+					</div>
+				</div>
+		</div>
+		<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+		<div>
+			<script type="text/javascript">
+				var s_edit_h = 'hidden';
+				var s_remove_h = 'hidden';
+			</script>
+		</div>
+		<div shiro:hasPermission="project:template:edit">
+			<script type="text/javascript">
+				s_edit_h = '';
+			</script>
+		</div>
+		<div shiro:hasPermission="project:template:remove">
+			<script type="text/javascript">
+				var s_remove_h = '';
+			</script>
+		</div>
+		<div shiro:hasPermission="project:template:removal">
+			<script type="text/javascript">
+        		var s_removal_h = '';
+			</script>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script type="text/javascript" src="/js/appjs/project/template/template.js"></script>
+
+</body>
+</html>

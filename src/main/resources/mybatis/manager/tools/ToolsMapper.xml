@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnce.manager.tools.dao.ToolsDao">
+
+    <select id="get" resultType="com.cnce.manager.tools.domain.ToolsDO">
+		select * from test_tools where id = #{id}
+	</select>
+
+    <select id="getToolsDeptIdById" resultType="com.cnce.manager.tools.domain.ToolsDO">
+        SELECT dept_id FROM test_tools WHERE id=#{value}
+    </select>
+
+    <select id="getToolsName" resultType="com.cnce.manager.tools.domain.ToolsDO">
+        SELECT name FROM test_tools
+    </select>
+
+    <select id="getToolId" resultType="com.cnce.manager.tools.domain.ToolsDO">
+        SELECT id FROM test_tools WHERE dept_id=#{value}
+    </select>
+
+    <select id="getToolsByDept" parameterType="java.lang.String" resultType="com.cnce.manager.tools.domain.ToolsDO">
+        SELECT * FROM test_tools WHERE use_dept=#{useDept}
+    </select>
+
+    <select id="getToolIdByName"  parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT id FROM test_tools where name=#{toolName}
+    </select>
+</mapper>

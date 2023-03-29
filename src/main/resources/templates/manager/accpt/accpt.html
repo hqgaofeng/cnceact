@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/ball.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" />
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap-filestyle.min.js"></script>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-left">
+                        <button shiro:hasPermission="manager:require:add" type="button"
+                                class="btn  btn-primary" onclick="add();">
+                            <i class="fa fa-plus hidden" aria-hidden="true"></i>添加
+                        </button>
+                    </div>
+                    <div class="columns pull-right">
+                        <button class="btn btn-success" onclick="reLoad()">查询</button>
+                    </div>
+
+                    <div class="columns pull-right col-md-2 nopadding" style="margin-right:10px;">
+                        <input id="searchName" type="text" class="form-control"
+                               placeholder="工具名称">
+                    </div>
+                </div>
+                <table id="exampleTable" data-mobile-responsive="true" style="table-layout: fixed;"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/manager/accpt/accpt.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.tools.dao.TopAPPDao">
+    <select id="getAllAppInfo" resultType="com.cnce.manager.tools.domain.TopAPPDO">
+        SELECT id,package as app_package,name,type,app_field,app_rank
+        FROM top_usage_info
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="appPackage != null and appPackage != ''">and package = #{appPackage}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="appField != null and appField != ''">and app_field = #{appField}</if>
+            <if test="appRank != null and appRank != ''">and app_rank = #{appRank}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from top_usage_info
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="appPackage != null and appPackage != ''">and package = #{appPackage}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="appField != null and appField != ''">and app_field = #{appField}</if>
+            <if test="appRank != null and appRank != ''">and app_rank = #{appRank}</if>
+        </where>
+    </select>
+
+    <select id="getAppType" resultType="java.lang.String">
+        select distinct type from top_usage_info
+    </select>
+
+    <select id="getAppField" resultType="java.lang.String">
+        select distinct app_field from top_usage_info where type=#{value}
+
+    </select>
+
+
+    <select id="getInfoByTypeAndFeild" resultType="com.cnce.manager.tools.domain.TopAPPDO">
+        SELECT id,package as app_package,name,type,app_field,app_rank
+        FROM top_usage_info
+        where type = #{type} and app_field = #{appField}
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="appPackage != null and appPackage != ''">and package = #{appPackage}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="appRank != null and appRank != ''">and app_rank = #{appRank}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <delete id="deleteAllData">
+--         delete  from top_usage_info;
+        truncate table top_usage_info
+    </delete>
+
+
+    <insert id="insertAllData" parameterType="com.cnce.manager.tools.domain.TopAPPDO" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO top_usage_info
+        ( `tool_id`,
+          `package`,
+          `name`,
+          `type`,
+          `app_field`,
+          `app_rank`
+          )
+         VALUES
+		(
+			#{toolId},
+			#{appPackage},
+			#{name},
+			#{type},
+			#{appField},
+			#{appRank}
+			)
+    </insert>
+
+
+
+</mapper>

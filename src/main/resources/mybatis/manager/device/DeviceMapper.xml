@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.device.dao.DeviceDao">
+
+    <select id="get" resultType="com.cnce.manager.device.domain.DeviceDO">
+		select * from test_device where id = #{value}
+	</select>
+
+    <select id="list" resultType="com.cnce.manager.device.domain.DeviceDO">
+        select * from test_device
+        <where>
+            <if test="id != null and id != ''"> and id = #{deviceId} </if>
+            <if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
+            <if test="computerName != null and computerName != ''"> and computer_name = #{computerName} </if>
+            <if test="computerAlias != null and computerAlias != ''"> and computer_alias = #{computerAlias} </if>
+            <if test="computerType != null and computerType != ''"> and computer_type = #{computerType} </if>
+            <if test="status != null and status != ''"> and status = #{status} </if>
+            <if test="optSystem != null and optSystem != ''"> and opt_system = #{optSystem} </if>
+            <if test="ip != null and ip != ''"> and computer_ip = #{ip} </if>
+            <if test="loginName != null and loginName != ''"> and login_name = #{loginName} </if>
+            <if test="loginPass != null and loginPass != ''"> and login_pass = #{loginPass} </if>
+            <if test="attrArea != null and attrArea != ''"> and attr_area = #{attrArea} </if>
+            <if test="siteNum != null and siteNum != ''"> and site_number = #{siteNum} </if>
+            <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+            <if test="userName != null and userName != ''"> and user_name = #{userName} </if>
+            <if test="belonger != null and belonger != ''"> and belonger = #{belonger} </if>
+            <if test="description != null and description != ''"> and description = #{description} </if>
+            <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_device
+        <where>
+            <if test="id != null and id != ''"> and id = #{deviceId} </if>
+            <if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
+            <if test="computerName != null and computerName != ''"> and computer_name = #{computerName} </if>
+            <if test="computerAlias != null and computerAlias != ''"> and computer_alias = #{computerAlias} </if>
+            <if test="computerType != null and computerType != ''"> and computer_type = #{computerType} </if>
+            <if test="status != null and status != ''"> and status = #{status} </if>
+            <if test="optSystem != null and optSystem != ''"> and opt_system = #{optSystem} </if>
+            <if test="ip != null and ip != ''"> and computer_ip = #{ip} </if>
+            <if test="loginName != null and loginName != ''"> and login_name = #{loginName} </if>
+            <if test="loginPass != null and loginPass != ''"> and login_pass = #{loginPass} </if>
+            <if test="attrArea != null and attrArea != ''"> and attr_area = #{attrArea} </if>
+            <if test="siteNum != null and siteNum != ''"> and site_number = #{siteNum} </if>
+            <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+            <if test="userName != null and userName != ''"> and user_name = #{userName} </if>
+            <if test="belonger != null and belonger != ''"> and belonger = #{belonger} </if>
+            <if test="description != null and description != ''"> and description = #{description} </if>
+            <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.manager.device.domain.DeviceDO" useGeneratedKeys="true" keyProperty="id">
+		insert into test_device
+		(
+			`dept_id`,
+			`computer_name`,
+			`computer_alias`,
+			`computer_type`,
+			`status`,
+			`opt_system`,
+			`computer_ip`,
+			`login_name`,
+			`login_pass`,
+			`attr_area`,
+			`site_number`,
+			`user_id`,
+			`user_name`,
+			`belonger`,
+			`description`,
+			`create_time`
+		)
+		values
+		(
+			#{deptId},
+			#{computerName},
+			#{computerAlias},
+			#{computerType},
+			#{status},
+			#{optSystem},
+			#{ip},
+			#{loginName},
+			#{loginPass},
+			#{attrArea},
+			#{siteNum},
+			#{userId},
+			#{userName},
+			#{belonger},
+			#{description},
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.cnce.manager.device.domain.DeviceDO">
+        update test_device
+        <set>
+            <if test="deptId != null"> dept_id = #{deptId}, </if>
+            <if test="computerName != null"> computer_name = #{computerName}, </if>
+            <if test="computerAlias != null"> computer_alias = #{computerAlias}, </if>
+            <if test="computerType != null"> computer_type = #{computerType}, </if>
+            <if test="status != null"> status = #{status}, </if>
+            <if test="optSystem != null"> opt_system = #{optSystem}, </if>
+            <if test="ip != null"> computer_ip = #{ip}, </if>
+            <if test="loginName != null"> login_name = #{loginName}, </if>
+            <if test="loginPass != null"> login_pass = #{loginPass}, </if>
+            <if test="attrArea != null"> attr_area = #{attrArea}, </if>
+            <if test="siteNum != null"> site_number = #{siteNum}, </if>
+            <if test="userId != null"> user_id = #{userId}, </if>
+            <if test="userName != null"> user_name = #{userName}, </if>
+            <if test="belonger != null"> belonger = #{belonger}, </if>
+            <if test="description != null"> description = #{description}, </if>
+            <if test="createTime != null"> create_time = #{createTime} </if>
+        </set>
+        where id = #{deviceId}
+    </update>
+
+    <delete id="remove">
+		delete from test_device where id = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from test_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getDev" parameterType="com.cnce.system.domain.UserDO" resultType="com.cnce.manager.device.domain.DeviceDO">
+        SELECT * FROM `test_device` where `user_id` = #{userId}
+    </select>
+
+</mapper>

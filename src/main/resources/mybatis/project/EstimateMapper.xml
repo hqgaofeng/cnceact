@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnce.project.manpower.dao.EstimateDao">
+
+    <select id="get" resultType="com.cnce.project.manpower.domain.EstimateDO">
+		select * from project_estimate where id = #{value}
+	</select>
+
+    <select id="getEstimateByMonth" resultType="com.cnce.project.manpower.domain.EstimateDO">
+        SELECT
+        `id`,
+        `u_id` as userId,
+        `total_manpower`,
+        `non_input`,
+        `pro_manpower`,
+        `effect_month`,
+        `create_time`
+        FROM project_estimate WHERE effect_month = #{effectMonth} AND u_id = #{userId} order BY id ASC LIMIT 1
+    </select>
+
+    <select id="list" resultType="com.cnce.project.manpower.domain.EstimateDO">
+        select * from project_estimate
+        <where>
+            <if test="id != null and id !=''">and id = #{id}</if>
+            <if test="userId != null and userId !=''">and u_id = #{userId}</if>
+            <if test="totalManpower != null and totalManpower !=''">and total_manpower = #{totalManpower}</if>
+            <if test="nonInput != null and nonInput !=''">and non_input = #{nonInput}</if>
+            <if test="proManPower != null and proManPower !=''">and pro_manpower = #{proManPower}</if>
+            <if test="effectMonth != null and effectMonth !=''">and effect_month = #{effectMonth}</if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset},#{limit}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.manpower.domain.EstimateDO" useGeneratedKeys="true" keyProperty="id">
+        insert into project_estimate
+        (
+        `u_id`,
+        `total_manpower`,
+        `non_input`,
+        `pro_manpower`,
+        `effect_month`,
+        `create_time`
+        )
+        value
+        (
+        #{userId},
+        #{totalManpower},
+        #{nonInput},
+        #{proManPower},
+        #{effectMonth},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.cnce.project.manpower.domain.EstimateDO">
+        update project_estimate
+        <set>
+            <if test="userId != null">`u_id` = #{userId}, </if>
+            <if test="totalManpower != null">`total_manpower` = #{totalManpower}, </if>
+            <if test="nonInput != null">`non_input` = #{nonInput}, </if>
+            <if test="proManPower != null">`pro_manpower` = #{proManPower}, </if>
+            <if test="effectMonth != null">`effect_month` = #{effectMonth}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updEstimate" parameterType="com.cnce.project.manpower.domain.EstimateDO">
+        update project_estimate
+        <set>
+            `total_manpower` = #{totalManpower},
+            `non_input` = #{nonInput},
+            `pro_manpower` = #{proManPower},
+            `create_time` = #{createTime}
+        </set>
+        where u_id = #{userId} and effect_month = #{effectMonth}
+    </update>
+
+    <select id="queryList" resultType="com.cnce.project.manpower.domain.EstimateDO">
+        select id,u_id as userId,total_manpower,non_input,pro_manpower,effect_month,create_time
+        from project_estimate where id in (
+        <foreach collection="list" item="item" separator=",">
+            #{item.id}
+        </foreach>
+        )
+    </select>
+
+    <delete id="remove">
+		delete from project_estimate where id = #{value}
+	</delete>
+
+
+</mapper>

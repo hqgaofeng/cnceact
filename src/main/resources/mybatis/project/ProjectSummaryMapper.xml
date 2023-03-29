@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.project.dao.ProjectSummaryDao">
+
+    <select id="list" resultType="com.cnce.project.project.domain.ProjectSummaryDO">
+        SELECT
+        tp.p_name as proName,
+        tp.written,
+        tp.pro_plan,
+        tp.plan_start_time,
+        tp.plan_end_time,
+        tp.test_cycle,
+        tp.total_power,
+        te.plan_manpower,
+        te.actual_manpower,
+        te.change_manpower,
+        te.create_time
+        FROM `test_project_plan` AS tp,
+        test_module_estimate AS te
+        <where>
+            tp.p_name = te.pro_name
+            <if test="planDate != null and planDate !=''">and te.plan_date = #{planDate}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by tp.pid asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from `test_project_plan` AS tp, test_module_estimate AS te
+        <where>
+            tp.p_name = te.pro_name
+            <if test="planDate != null and planDate !=''">and te.plan_date = #{planDate}</if>
+        </where>
+    </select>
+
+</mapper>

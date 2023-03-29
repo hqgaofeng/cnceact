@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.accpt.dao.AccptDao">
+    <select id="getAccptInfo" resultType="com.cnce.manager.accpt.domain.AccptDO">
+        SELECT user_name,tool_name,opinion,accpt_result,accpt_time
+        FROM tool_accpt_info
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">and user_name = #{userName}</if>
+            <if test="opinion != null and opinion != ''">and opinion = #{opinion}</if>
+            <if test="accptResult != null and accptResult != ''">and accpt_result = #{accptResult}</if>
+            <if test="accptTime != null and accptTime != ''">and accpt_time = #{accptTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from tool_accpt_info
+        <where>
+         <if test="id != null and id != ''">and id = #{id}</if>
+        <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+        <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+        <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+        <if test="userName != null and userName != ''">and user_name = #{userName}</if>
+        <if test="opinion != null and opinion != ''">and opinion = #{opinion}</if>
+        <if test="accptResult != null and accptResult != ''">and accpt_result = #{accptResult}</if>
+        <if test="accptTime != null and accptTime != ''">and accpt_time = #{accptTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.manager.accpt.domain.AccptDO" useGeneratedKeys="true" keyProperty="id">
+        insert into tool_accpt_info
+        (
+        `user_id`,
+        `user_name`,
+        `tool_id`,
+        `tool_name`,
+        `opinion`,
+        `accpt_result`,
+        `accpt_time`
+        )
+        values
+        (
+        #{userId},
+        #{userName},
+        #{toolId},
+        #{toolName},
+        #{opinion},
+        #{accptResult},
+        #{accptTime}
+        )
+    </insert>
+
+</mapper>

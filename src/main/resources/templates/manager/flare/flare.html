@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+>
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/ball.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" />
+<script src="/js/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<meta charset="utf-8">
+<head th:include="include :: header">
+    <style>
+/* 弹窗 (background) */
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed; /* 固定定位 */
+    z-index: 1; /* 设置在顶层 */
+    left: 0;
+    top: 0;
+    width: 10%;
+    height: 10%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+/* 弹窗内容 */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* 关闭按钮 */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.progress{
+    background: #262626;
+    border-radius: 20px;
+    height: 20px;
+    border-top: 1px solid #000;
+    box-shadow: 0 5px 4px -6px #aaa;
+    margin-top: 50px;
+    overflow: visible;
+}
+.progress .progress-bar{
+    border-radius: 20px;
+    position: relative;
+    animation: animate-positive 2s;
+}
+.progress .progress-bar:after{
+    content: "\f111";
+    font-family: fontawesome;
+    font-size: 10px;
+    color: rgba(0,0,0,0.4);
+    position: absolute;
+    top: -1px;
+    right: 10px;
+}
+.progress .progress-value{
+    display: block;
+    font-size: 13px;
+    color: #fff;
+    border-radius: 4px;
+    padding: 3px 8px;
+    background:#191919;
+    position: absolute;
+    top: -40px;
+    right: -27px;
+}
+.progress .progress-value:after{
+    content: "";
+    border-top: 5px solid #191919;
+    border-left: 5px solid #191919;
+    border-bottom: 5px solid transparent ;
+    border-right: 5px solid transparent;
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+}
+@-webkit-keyframes animate-positive{
+    0% { width: 0%; }
+}
+@keyframes animate-positive{
+    0% { width: 0%; }
+}
+
+    </style>
+</head>
+<body background="/img/blackground.jpg" class="gray-bg">
+<div class="modal fade" id="myModal9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content" style="margin-top:20%">
+            <div class="modal-body"  style="margin-left:35%">
+                当前节点不在线，请启动当前节点！！！
+            </div>
+            <div style="margin-left:45%;margin-bo:10%;margin-bottom: 5%;">
+                <button type="button"
+                        data-dismiss="modal">确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div style="float:right;position: absolute;margin-left: 5%; margin-top:1%;" id="instructionDiv">
+    <img src="/img/InstructionBook.png " style="width:100px;" type="button"
+         class="btn " data-toggle="modal" data-target="#myModal1">
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="false" data-keyboard="false" >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div  class="modal-content" style="width:700px;height:500px;margin-top:20%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true" >×
+                    </button>
+                    <h1 class="modal-title" id="myModalLabel1" align="center">
+                        Flare工具使用说明书
+                    </h1>
+                </div>
+                <div class="modal-body" style="width: 650px;height:400px; margin: 0px auto;overflow-y: scroll;">
+                    <h3>该工具主要实现自动拍照，并将照片导出值excel表格中。</h3>
+                    <h3>需要输入的参数：测试项目 ，测试镜头（前置/后置），测试场景，</h3>
+                    <h3>导出路径，导出的表格名称，测试的样机编号，以及执行机的选择。</h3>
+                    <h3>开始：点击开始任务下发，</h3>
+                    <h3> 取消：点击取消任务取消。</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h5 align="center">工具说明书</h5>
+    </div>
+</div>
+<div class="wrapper wrapper-content " style="height: 100%; overflow: auto;">
+    <form role="form" style="margin-top:30px;">
+        <div class="form-group">
+            <div class="ibox" style="margin-left:100px;margin-top:50px;">
+                <div class="ibox" style="margin-left:150px;margin-top:50px;">
+                    <div class="ibox-body">
+                        <div class="fixed-table-toolbar">
+                            <div class="columns pull-left">
+                                <h1 style="margin-top:8px;margin-left:70px;font-weight:bold;"> Flare测试</h1>
+                                <h1 style="margin-top:8px;margin-left:70px;font-weight:bold">图片自动导出</h1>
+                                <img height="324" src="/img/carmeraFlare.png" width="326">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="float:left">
+                <div class="ibox" style="margin-left:150px;margin-top:0px;">
+                    <div class="ibox-body">
+                        <div class="fixed-table-toolbar">
+                            <div class="columns pull-left">
+                                <h3 style="margin-top:8px;">测试项目:</h3>
+                            </div>
+                            <div class="dropdown columns pull-left">
+                                <select class='form-control selectpicker' data-live-search="true" id='projectName'
+                                        name='projectName'
+                                        style="width:200px;height:30px;margin-left:10px;">
+                                    <option value="请选择测试项目">请选择测试项目</option>
+                                    <option value="Q6803">Q6803</option>
+                                    <option value="Q7503">Q7503</option>
+                                </select>
+                                <div id="warning1" style="color:red;display:none;">请选择测试项目</div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox" style="margin-left:0px;margin-top:5px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <div class="columns pull-left">
+                                    <h3 style="margin-top:8px;">测试镜头:</h3>
+                                </div>
+                                <div class="dropdown columns pull-left">
+                                    <select class='form-control selectpicker' data-live-search="true" id='cameraLens'
+                                            name='cameraLens'
+                                            style="width:200px;height:30px;margin-left:10px;">
+                                        <option value="请选择测试镜头">请选择测试镜头</option>
+                                        <option value="前摄">前摄</option>
+                                        <option value="后摄">后摄</option>
+                                        <option value="广角">广角</option>
+                                    </select>
+                                    <div id="warning2" style="color:red;display:none;">请选择测试镜头</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox" style="margin-left:0px;margin-top:5px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <div class="columns pull-left">
+                                    <h3 style="margin-top:8px;">测试场景:</h3>
+                                </div>
+                                <div class="dropdown columns pull-left">
+                                    <select class='form-control selectpicker' data-live-search="true" id='testScene'
+                                            name='cameraMode'
+                                            style="width:200px;height:30px;margin-left:10px;">
+                                        <option value="请选择测试场景">请选择测试场景</option>
+                                        <option value="室内">室内</option>
+                                        <option value="太阳光">太阳光</option>
+                                        <option value="夜景">夜景</option>
+                                    </select>
+                                    <div id="warning3" style="color:red;display:none;">请选择测试镜头</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox" style="margin-left:0px;margin-top:5px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <div class="columns pull-left">
+                                    <h3 style="margin-top:8px;">导出目录:</h3>
+                                </div>
+                                <div class="columns pull-left">
+                                <input id="path" style="width:200px;margin-left:10px;height:25px;" type="text"
+                                       placeholder="请输入导出路径">
+<!--                                    <input id="path" style="width:200px;margin-left:10px;height:25px;" type="text" placeholder="请输入导出路径">-->
+                                    <div id="warning4" style="color:#d90808;display:none;">请输入合法的导出路径</div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox" style="margin-left:0px;margin-top:5px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <div class="columns pull-left">
+                                    <h3 style="margin-top:8px;">导出表格:</h3>
+                                </div>
+                                <div class="columns pull-left">
+                                    <input id="name" style="width:200px;margin-left:10px;height:25px;" type="text"
+                                           value="请输入表格名称">
+                                    <div id="warning5" style="color:red;display:none;">请输入表格名称</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox" style="margin-left:0px;margin-top:5px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <div class="columns pull-left">
+                                    <h3 style="margin-top:8px;">样机编号:</h3>
+                                </div>
+                                <div class="columns pull-left">
+                                    <input id="number" style="width:200px;margin-left:10px;height:25px;" type="text"
+                                           value="请输入样机编号"  oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                    <div id="warning6" style="color:red;display:none;">请输入样机编号</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ibox" style="margin-left:0px;margin-top:5px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <div class="columns pull-left">
+                                    <h3 style="margin-top:8px;">设备选择:</h3>
+                                </div>
+                                <div class="dropdown columns pull-left">
+                                    <select class='dropdown bootstrap-select' data-live-search="true" id='selectEquip'
+                                            name='equip'
+                                            style="width:200px;height:30px;margin-left:10px;">
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox" style="margin-left:0px;margin-top:30px;">
+                        <div class="ibox-body">
+                            <div class="fixed-table-toolbar">
+                                <button  onclick="checkFlare()";  type="button" style="margin-right:10px;width:100px;"
+                                         class="btn  btn-primary" id="start" >
+                                    <i aria-hidden="true"></i>开始
+                                </button>
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div  class="modal-content" style="width:500px;height:300px;margin-top:20%;">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true" >×
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel_1" align="center">
+                                                    请核对以下条件是否完成确认！
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body" style="width: 550px; margin: 0px auto;">
+                                                <div>
+                                                    <label><input name="ball" id="ball1" type="checkbox" value="0" align="center" onclick="check();">确认执行机是否在线</label>
+                                                </div>
+                                                <div>
+                                                    <label><input name="ball" id="ball2"type="checkbox" value="1" align="center" onclick="check();">确认执行机是否选择正确</label>
+                                                </div>
+                                                <div>
+                                                    <label><input name="ball" id="ball3" type="checkbox" value="2" align="center" onclick="check();">确认所选择执行机上的设备是否连接正常</label>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div style="text-align:center" >
+                                                    <button type="button" style="width:100px;margin-top:10px;" id="confirm"  data-dismiss="modal"
+                                                            class="btn  btn-primary" onclick="clickStartTask();">确定
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-danger"
+                                        onclick="clickCancelBtn();"
+                                        style="margin-right:10px;width:100px;margin-left:70px;" type="button">
+                                    <i aria-hidden="true"></i>取消
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox" style="margin-left:100px;margin-top:30px;width:900px;">
+                <div class="progress" id="progress" style="display: none;">
+                    <div id="progress_bar" class="progress-bar progress-bar-striped active" role="progressbar"
+                         style="width: 0%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);"
+                         aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-value" id="progress_value">
+                            0%
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+<script src="/js/appjs/manager/tools/flare.js" type="text/javascript"></script>
+<script>
+    $(function() {
+        $( "#myModal1" ).draggable();
+    });
+</script>
+<script>
+    $(function() {
+        $( "#instructionDiv" ).draggable();
+    });
+</script>
+
+<script>
+    const pathInput = document.getElementById("path");
+    const warningDiv = document.getElementById("warning");
+
+    // 监听输入框失去焦点事件
+    pathInput.addEventListener("blur", function() {
+        const pathValue = pathInput.value.trim();
+
+        // 检查路径是否为空
+        if (pathValue === "") {
+            warningDiv.innerText = "导出路径不能为空";
+            warningDiv.style.display = "block";
+            return;
+        }
+
+        // 检查路径是否合法，可以根据具体需求编写正则表达式
+        const pathRegex = /^[a-zA-Z]:\\(.+\\)*[^\\/:*?"<>|]*$/;
+        if (!pathRegex.test(pathValue)) {
+            warningDiv.innerText = "请输入合法的导出路径";
+            warningDiv.style.display = "block";
+            return;
+        }
+
+        // 校验通过，清空警告信息并继续其他操作
+        warningDiv.style.display = "none";
+        // TODO: 进行其他操作，比如导出文件
+    });
+</script>
+
+
+
+</html>

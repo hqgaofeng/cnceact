@@ -1,0 +1,76 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"-->
+<!--	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">-->
+
+<!--<meta charset="utf-8">-->
+<!--<head th:include="include :: header"></head>-->
+<!--<body class="gray-bg">-->
+<!--	<div class="wrapper wrapper-content ">-->
+<!--		<div class="col-sm-12">-->
+<!--				<div class="ibox">-->
+<!--					<div class="ibox-body">-->
+<!--						<div class="fixed-table-toolbar">-->
+
+<!--							<div class="columns pull-right">-->
+
+<!--								<button class="btn btn-success " onclick="reLoad()">查询</button>-->
+<!--							</div>-->
+
+<!--							<div class="columns  col-md-2 nopadding ">-->
+<!--								<input id="proName" type="text" class="form-control"-->
+<!--									   placeholder="项目名称">-->
+<!--							</div>-->
+<!--							<div class="columns  col-md-2 nopadding">-->
+<!--								<input id="planDate" name="planDate"-->
+<!--									   onClick="return Calendar('planDate');" class="form-control"-->
+<!--									   type="text" placeholder="日期">-->
+<!--							</div>-->
+<!--						</div>-->
+<!--				<table id="exampleTable" data-mobile-responsive="true" ></table>-->
+
+<!--					</div>-->
+<!--				</div>-->
+<!--		</div>-->
+<!--	</div>-->
+<!--	<div th:include="include :: footer"></div>-->
+<!--	<script type="text/javascript" src="/js/appjs/project/summary/summary.js"></script>-->
+<!--	<script type="text/javascript" src="/js/appjs/manager/showdate.js"></script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="ibox-body">
+				<div id="exampleToolbar">
+					<div class="columns pull-left col-md-5 nopadding">
+						<input id="proName" type="text" class="form-control"
+							   placeholder="项目名称">
+					</div>
+					<div class="columns pull-left col-md-5 nopadding">
+						<input id="planDate" name="planDate"
+							   onClick="return Calendar('planDate');" class="form-control"
+							   type="text" placeholder="日期">
+					</div>
+					<div class="columns pull-left">
+						<button class="btn btn-success" onclick="reLoad()">查询</button>
+					</div>
+				</div>
+				<table id="exampleTable" data-mobile-responsive="true"/>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/project/summary/summary.js"></script>
+<script type="text/javascript" src="/js/appjs/manager/showdate.js"></script>
+</body>
+</html>

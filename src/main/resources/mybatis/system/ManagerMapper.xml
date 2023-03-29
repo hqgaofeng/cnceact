@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.system.dao.ManagerDao">
+    <select id="getToolsInfo" resultType="com.cnce.system.domain.ManagerDO">
+        select
+        `id`,`name`,`status`,`use_dept`,`t_use_area`,`due_time`
+        from test_tools
+        <where>
+            <if test="name != null and name != ''"> and name = #{name} </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="get" parameterType="java.lang.Integer" resultType="com.cnce.system.domain.ManagerDO">
+        select
+        `id`,`name`,`status`,`use_dept`,`t_use_area`,`due_time`
+        from test_tools
+        <where>
+            <if test="_parameter != null and _parameter != ''"> and id = #{_parameter} </if>
+        </where>
+    </select>
+
+
+    <select id="count" resultType="int">
+    select count(*) from test_tools
+    <where>
+        <if test="name != null and name != ''"> and name = #{name} </if>
+    </where>
+    </select>
+
+
+    <select id="getDeptIdByName"  parameterType="java.lang.String"  resultType="java.lang.Integer">
+        select `dept_id` from sys_dept
+        <where>
+            <if test="_parameter != null and _parameter != ''"> and name = #{_parameter} </if>
+        </where>
+    </select>
+
+    <select id="getReqIdByToolName"  parameterType="java.lang.String" resultType="java.lang.Integer">
+        select `id` from test_require_info
+        <where>
+            <if test="_parameter != null and _parameter != ''"> and tool_name = #{_parameter} </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.system.domain.ManagerDO" useGeneratedKeys="true" keyProperty="id">
+        insert into test_tools
+        (
+        `req_id`,
+        `dept_id`,
+        `name`,
+        `platform`,
+        `t_project`,
+        `t_version`,
+        `status`,
+        `use_dept`,
+        `t_use_area`,
+        `t_describe`,
+        `tool_path`,
+        `due_time`,
+        `update_time`
+        )
+        values
+        (
+        #{reqId},
+        #{deptId},
+        #{name},
+        #{platform},
+        #{tProject},
+        #{tVersion},
+        #{status},
+        #{useDept},
+        #{tUseArea},
+        #{tDescribe},
+        #{toolPath},
+        #{dueTime},
+        #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.cnce.system.domain.ManagerDO">
+        update test_tools
+        <set>
+            <if test="reqId != null">`req_id` = #{reqId}, </if>
+            <if test="deptId != null">`dept_id` = #{deptId},</if>
+            <if test="name != null"> `name` = #{name},</if>
+            <if test="platform != null">`platform` = #{platform},</if>
+            <if test="tProject != null">`t_project` = #{tProject},</if>
+            <if test="tVersion != null">`t_version` = #{tVersion},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="useDept != null">`use_dept` = #{useDept},</if>
+            <if test="tUseArea != null">`t_use_area` = #{tUseArea},</if>
+            <if test="tDescribe != null">`t_describe` = #{tDescribe},</if>
+            <if test="toolPath != null">`tool_path` = #{toolPath},</if>
+            <if test="dueTime != null">`due_time` = #{dueTime},</if>
+            <if test="updateTime != null">`update_time` = #{updateTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete from test_tools where id = #{id}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from test_tools where id in
+        <foreach item="id" collection="array" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

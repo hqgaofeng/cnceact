@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.require.dao.RequireDao">
+
+    <select id="get" resultType="com.cnce.manager.require.domain.RequireDO">
+        select * from test_require_info where id = #{value}
+    </select>
+
+    <select id="list" resultType="com.cnce.manager.require.domain.RequireDO">
+        SELECT
+            tr.id,
+            tr.tool_name,
+            tr.type,
+            tr.describe,
+            tr.sponsor,
+            tr.dept_opinion,
+            tr.income_analysis,
+            tr.is_approve,
+            tr.expect_due_time as expectDueTime,
+            tr.actual_delive_time as actualDelTime,
+            tr.create_time
+         FROM test_require_info as tr
+        <where>
+            <if test="id != null and id !=''"> and tr.id = #{id} </if>
+            <if test="toolName != null and toolName !=''"> and tr.tool_name = #{toolName} </if>
+            <if test="type != null and type !=''"> and tr.type = #{type} </if>
+            <if test="describe != null and describe !=''"> and tr.describe = #{describe} </if>
+            <if test="sponsor != null and sponsor !=''"> and tr.sponsor = #{sponsor} </if>
+            <if test="deptOpinion != null and deptOpinion !=''"> and tr.dept_opinion = #{deptOpinion} </if>
+            <if test="incomeAnalysis != null and incomeAnalysis !=''"> and tr.income_analysis = #{incomeAnalysis} </if>
+            <if test="isApprove != null and isApprove !=''"> and tr.is_approve = #{isApprove} </if>
+            <if test="expectDueTime != null and expectDueTime !=''"> and tr.expect_due_time = #{expectDueTime} </if>
+            <if test="actualDelTime != null and actualDelTime !=''"> and tr.actual_delive_time = #{actualDelTime} </if>
+            <if test="createTime != null and createTime !=''"> and tr.create_time = #{createTime} </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by tr.id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset},#{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_require_info
+        <where>
+            <if test="id != null and id !=''">and `id` = #{id}</if>
+            <if test="toolName != null and toolName !=''">and `tool_name` = #{toolName}</if>
+            <if test="type != null and type !=''">and `type` = #{type}</if>
+            <if test="describe != null and describe !=''">and `describe` = #{describe}</if>
+            <if test="sponsor != null and sponsor !=''">and `sponsor` = #{sponsor}</if>
+            <if test="deptOpinion != null and deptOpinion !=''">and `dept_opinion` = #{deptOpinion}</if>
+            <if test="incomeAnalysis != null and incomeAnalysis !=''">and `income_analysis` = #{incomeAnalysis}</if>
+            <if test="isApprove != null and isApprove !=''">and `is_approve` = #{isApprove}</if>
+            <if test="expectDueTime != null and expectDueTime !=''"> and expect_due_time = #{expectDueTime} </if>
+            <if test="actualDelTime != null and actualDelTime !=''"> and actual_delive_time = #{actualDelTime} </if>
+            <if test="createTime != null and createTime !=''">and `create_time` = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.manager.require.domain.RequireDO" useGeneratedKeys="true" keyProperty="id">
+          insert into test_require_info
+                (
+                    `tool_name`,
+                    `type`,
+                    `describe`,
+                    `sponsor`,
+                    `dept_opinion`,
+                    `income_analysis`,
+                    `is_approve`,
+                    `expect_due_time`,
+                    `create_time`
+                )
+            values
+                (
+                    #{toolName},
+                    #{type},
+                    #{describe},
+                    #{sponsor},
+                    #{deptOpinion},
+                    #{incomeAnalysis},
+                    #{isApprove},
+                    #{expectDueTime},
+                    #{createTime}
+                )
+    </insert>
+
+    <update id="update" parameterType="com.cnce.manager.require.domain.RequireDO">
+        update test_require_info
+        <set>
+            <if test="toolName != null"> `tool_name` = #{toolName},</if>
+            <if test="type != null"> `type` = #{type},</if>
+            <if test="describe != null"> `describe` = #{describe},</if>
+            <if test="sponsor != null"> `sponsor` = #{sponsor},</if>
+            <if test="deptOpinion != null"> `dept_opinion` = #{deptOpinion},</if>
+            <if test="incomeAnalysis != null"> `income_analysis` = #{incomeAnalysis},</if>
+            <if test="isApprove != null"> `is_approve` = #{isApprove},</if>
+            <if test="expectDueTime != null"> `expect_due_time` = #{expectDueTime},</if>
+            <if test="actualDelTime != null"> `actual_delive_time` = #{actualDelTime},</if>
+            <if test="createTime != null"> `create_time` = #{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.common.dao.RmopLogDao">
+
+	<select id="get" resultType="com.cnce.common.domain.RmopLogDO">
+		select `id`,`device_no`,`user_id`,`user_name`,`method`,`operation`,`ip`,`create_time` from rmop_log where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.cnce.common.domain.RmopLogDO">
+		select `id`,`device_no`,`user_id`,`user_name`,`method`,`operation`,
+		`ip`,`create_time` from rmop_log
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+			      <if test="deviceNo != null and deviceNo != ''"> and device_no = #{deviceNo} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="userName != null and userName != ''"> and userName = #{user_name} </if>
+				  <if test="method != null and method != ''"> and method = #{method} </if>
+		  		  <if test="operation != null and operation != ''"> and operation = #{operation} </if>
+		  		  <if test="ip != null and ip != ''"> and ip = #{ip} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from rmop_log
+		 <where>
+			 <if test="id != null and id != ''"> and id = #{id} </if>
+			 <if test="deviceNo != null and deviceNo != ''"> and device_no = #{deviceNo} </if>
+			 <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			 <if test="userName != null and userName != ''"> and userName = #{user_name} </if>
+			 <if test="method != null and method != ''"> and method = #{method} </if>
+			 <if test="operation != null and operation != ''"> and operation = #{operation} </if>
+			 <if test="ip != null and ip != ''"> and ip = #{ip} </if>
+			 <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		 </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cnce.common.domain.RmopLogDO" useGeneratedKeys="true" keyProperty="id">
+		insert into rmop_log
+		(
+			`device_no`,
+			`user_id`,
+			`user_name`,
+			`method`,
+			`operation`, 
+			`ip`,
+			`create_time`
+		)
+		values
+		(#{deviceNo},
+			#{userId}, 
+			#{userName},
+			#{method},
+			#{operation}, 
+			#{ip},
+			#{createTime}
+		)
+	</insert>
+
+	<delete id="batchRemove">
+		delete from rmop_log where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg"  background="/img/blackground.jpg" >
+<div class="wrapper wrapper-content ">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-right">
+                        <button type="button"
+                                class="btn btn-success" onclick="reLoad();">
+                            <i aria-hidden="true"></i>查询
+                        </button>
+                    </div>
+                    <div class="dropdown columns pull-right" >
+                        <select class='dropdown bootstrap-select' data-live-search="true" id='selectToolName' name='toolName'
+                                style="width:150px;height:30px;margin-right:10px;">
+                            <option value="null">请选择工具名称</option>
+                        </select>
+                    </div>
+                    <div class="form-group columns pull-left">
+                        <label>选择查询时间：</label>
+                    </div>
+                    <div class="form-group columns pull-left">
+                        <div style="float:left;margin-left:5px;">
+                            <input type="text" name="date1" id="date1" class="form-control" style="width: 80%;"placeholder="开始时间">
+                            <input type="hidden" id = "submitDate" name="submitDate" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group columns pull-left">
+                        <label>至</label>
+                    </div>
+                        <div class="form-group columns pull-left">
+                        <div style="float:left;margin-left:5px;">
+                            <input type="text" name="date2" id="date2" class="form-control" style="width: 80%;" placeholder="结束时间">
+                            <input type="hidden" id = "submitDate2" name="submitDate2" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <table id="exampleTable" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/manager/report/report.js"></script>
+<link rel="stylesheet" href="/css/daterangepicker.css">
+<script src="/js/moment.min.js"></script>
+<script src="/js/daterangepicker.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+
+$(function () {
+    //单个时间插件
+    $("input[name='date1']").daterangepicker(
+        {
+            singleDatePicker: true,//设置为单个的datepicker，而不是有区间的datepicker 默认false
+            showDropdowns: true,//当设置值为true的时候，允许年份和月份通过下拉框的形式选择 默认false
+            autoUpdateInput: false,//1.当设置为false的时候,不给与默认值(当前时间)2.选择时间时,失去鼠标焦点,不会给与默认值 默认true
+            timePicker24Hour : true,//设置小时为24小时制 默认false
+            timePicker : false,//可选中时分 默认false
+            locale: {
+                format: "YYYY-MM-DD",
+                separator: " - ",
+                daysOfWeek: ["日","一","二","三","四","五","六"],
+                monthNames: ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+            }
+
+        }
+    ).on('cancel.daterangepicker', function(ev, picker) {
+        $("#date1").val("请选择日期");
+        $("#submitDate").val("");
+    }).on('apply.daterangepicker', function(ev, picker) {
+        $("#submitDate").val(picker.startDate.format('YYYY-MM-DD'));
+        $("#date1").val(picker.startDate.format('YYYY-MM-DD'));
+    });
+});
+</script>
+
+<script type="text/javascript">
+
+$(function () {
+    //单个时间插件
+    $("input[name='date2']").daterangepicker(
+        {
+            singleDatePicker: true,//设置为单个的datepicker，而不是有区间的datepicker 默认false
+            showDropdowns: true,//当设置值为true的时候，允许年份和月份通过下拉框的形式选择 默认false
+            autoUpdateInput: false,//1.当设置为false的时候,不给与默认值(当前时间)2.选择时间时,失去鼠标焦点,不会给与默认值 默认true
+            timePicker24Hour : true,//设置小时为24小时制 默认false
+            timePicker : false,//可选中时分 默认false
+            locale: {
+                format: "YYYY-MM-DD",
+                separator: " - ",
+                daysOfWeek: ["日","一","二","三","四","五","六"],
+                monthNames: ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+            }
+
+        }
+    ).on('cancel.daterangepicker', function(ev, picker) {
+        $("#date2").val("请选择日期");
+        $("#submitDate2").val("");
+    }).on('apply.daterangepicker', function(ev, picker) {
+        $("#submitDate2").val(picker.startDate.format('YYYY-MM-DD'));
+        $("#date2").val(picker.startDate.format('YYYY-MM-DD'));
+    });
+});
+</script>

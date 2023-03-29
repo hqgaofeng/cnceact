@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.template.dao.TempSyncDao">
+
+    <select id="getProjectList" resultType="com.cnce.project.template.domain.TempSyncDO">
+        select * from project_info
+        <where>
+            <if test="proId != null and proId !=''">and pro_id = #{proId}</if>
+            <if test="JiraId != null and JiraId !=''">and jira_id = #{JiraId}</if>
+            <if test="pName != null and pName !=''">and p_name = #{pName}</if>
+            <if test="pStatus != null and pStatus !=''">and p_status = #{pStatus}</if>
+            <if test="region != null and region !=''">and region = #{region}</if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <otherwise>
+                order by pro_id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getProjectByName" resultType="com.cnce.project.template.domain.TempSyncDO">
+        select * FROM project_info WHERE p_name = #{pName} and region = #{region}
+    </select>
+
+    <select id="getProjectByJId" resultType="com.cnce.project.template.domain.TempSyncDO">
+        select * FROM project_info WHERE jira_id = #{JiraId} LIMIT 1
+    </select>
+
+    <select id="getProjects" resultType="java.lang.String">
+        SELECT DISTINCT(p_name) FROM
+            project_info
+        WHERE
+            p_status = '1'
+            AND region = #{region}
+    </select>
+
+    <update id="update" parameterType="com.cnce.project.template.domain.TempSyncDO">
+        update project_info
+        <set>
+            <if test="JiraId != null"> `jira_id` = #{JiraId},</if>
+            <if test="pName != null"> `p_name` = #{pName},</if>
+            <if test="pStatus != null"> `p_status` = #{pStatus},</if>
+            <if test="region != null"> `region` = #{region},</if>
+            <if test="createTime != null"> `create_time` = #{createTime}</if>
+        </set>
+        where pro_id = #{proId}
+    </update>
+
+    <update id="updToNData" parameterType="com.cnce.project.template.domain.TempSyncDO">
+        update project_info set p_status = 0
+        where pro_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item.proId}
+        </foreach>
+    </update>
+
+    <update id="updToYData" parameterType="com.cnce.project.template.domain.TempSyncDO">
+        update project_info set p_status = 1
+        where pro_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+          #{item.proId}
+        </foreach>
+    </update>
+
+    <insert id="saveData" parameterType="com.cnce.project.template.domain.TempSyncDO">
+        insert into project_info (jira_id, p_name, p_status, region, create_time)
+        values
+        <foreach collection="list" item="item" separator="," close=";">
+            (
+            #{item.JiraId},
+            #{item.pName},
+            #{item.pStatus},
+            #{item.region},
+            now()
+            )
+        </foreach>
+    </insert>
+
+</mapper>

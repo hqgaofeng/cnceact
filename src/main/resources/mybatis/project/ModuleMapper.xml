@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.module.dao.ModuleDao">
+
+    <select id="get" resultType="com.cnce.project.module.domain.ModuleDO">
+		select t.mid,t.mod_name,t.create_time
+		from test_module t
+		where t.mid = #{value}
+	</select>
+
+    <select id="getModuleByName" resultType="com.cnce.project.module.domain.ModuleDO">
+        select * FROM test_module WHERE mod_name = #{modName}
+    </select>
+
+    <select id="list" resultType="com.cnce.project.module.domain.ModuleDO">
+        select `mid`, `mod_name`,`create_time`
+        from test_module
+        <where>
+            <if test="mId != null and mId != ''"> and mid = #{mId} </if>
+            <if test="modName != null and modName != ''"> and mod_name = #{modName} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by mid asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_module
+        <where>
+            <if test="mId != null and mId != ''"> and mid = #{mId} </if>
+            <if test="modName != null and modName != ''"> and mod_name = #{modName} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.module.domain.ModuleDO" useGeneratedKeys="true" keyProperty="mId">
+		insert into test_module
+		(
+			`mid`,
+			`mod_name`,
+			`create_time`
+		)
+		values
+		(
+			#{mId},
+			#{modName},
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.cnce.project.module.domain.ModuleDO">
+        update test_module
+        <set>
+            <if test="mId != null">`mid` = #{mId}, </if>
+            <if test="modName != null">`mod_name` = #{modName}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where mid = #{mId}
+    </update>
+
+    <delete id="remove">
+		delete from test_module where mid = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from test_module where mid in
+        <foreach item="mId" collection="array" open="(" separator="," close=")">
+            #{mId}
+        </foreach>
+    </delete>
+
+</mapper>

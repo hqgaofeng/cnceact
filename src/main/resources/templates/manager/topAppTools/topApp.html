@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+
+<script src="/js/jquery.js"></script>
+<link rel="stylesheet" href="/css/plugins/bootstrap-table/bootstrap-table.min.css">
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/fileinput.js"></script>
+<script src="/js/zh.js"></script>
+<link href="/css/bootstrap.min.css" rel="stylesheet"></link>
+<meta charset="utf-8">
+<head th:include="include :: header">
+    <style>
+        /* 弹窗 (background) */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定定位 */
+            z-index: 1; /* 设置在顶层 */
+            left: 0;
+            top: 0;
+            width: 10%;
+            height: 10%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        /* 弹窗内容 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* 关闭按钮 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .progress{
+            background: #262626;
+            border-radius: 20px;
+            height: 20px;
+            border-top: 1px solid #000;
+            box-shadow: 0 5px 4px -6px #aaa;
+            margin-top: 50px;
+            overflow: visible;
+        }
+        .progress .progress-bar{
+            border-radius: 20px;
+            position: relative;
+            animation: animate-positive 2s;
+        }
+        .progress .progress-bar:after{
+            content: "\f111";
+            font-family: fontawesome;
+            font-size: 10px;
+            color: rgba(0,0,0,0.4);
+            position: absolute;
+            top: -1px;
+            right: 10px;
+        }
+        .progress .progress-value{
+            display: block;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            padding: 3px 8px;
+            background:#191919;
+            position: absolute;
+            top: -40px;
+            right: -27px;
+        }
+        .progress .progress-value:after{
+            content: "";
+            border-top: 5px solid #191919;
+            border-left: 5px solid #191919;
+            border-bottom: 5px solid transparent ;
+            border-right: 5px solid transparent;
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+        }
+        @-webkit-keyframes animate-positive{
+            0% { width: 0%; }
+        }
+        @keyframes animate-positive{
+            0% { width: 0%; }
+        }
+    </style>
+</head>
+
+<body class="gray-bg" background="/img/blackground.jpg">
+<div class="modal fade" id="myModal9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content" style="margin-top:20%">
+            <div class="modal-body"  style="margin-left:35%">
+                当前节点不在线，请启动当前节点！！！
+            </div>
+            <div style="margin-left:45%;margin-bo:10%;margin-bottom: 5%;">
+                <button type="button"
+                        data-dismiss="modal">确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div style="float:right;position: absolute;margin-left: 80%; margin-top: 40%" id="instructionDiv" draggable="true">
+    <img src="/img/InstructionBook.png " style="width:100px;" type="button"
+         class="btn " data-toggle="modal" data-target="#myModal4">
+    <div>
+        <h5 align="center">工具说明书</h5>
+    </div>
+</div >
+<div class="modal fade"  id="myModal4" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="false" data-keyboard="false"  draggable="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div  class="modal-content" style="width:700px;height:500px;margin-top:20%;">
+            <div class="modal-header">
+                <button ype="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h1 class="modal-title" id="myModalLabel1" align="center">
+                    TopApp安装卸载工具使用说明书
+                </h1>
+            </div>
+            <div class="modal-body" style="width: 650px; height:400px;margin: 0px auto;overflow-y: scroll;">
+                <h3>该工具主要实现自动下载安装和卸载选中的排名前三千的应用。</h3>
+                <h3>查询：可以根据应用的类别和细分领域查询对应的应用。</h3>
+                <h3>安装：自动在应用市场下载并安装选中的应用</h3>
+                <h3>卸载：自动从设备中卸载选中的应用</h3>
+                <h3>查看报告：执行完任务后查看执行的结果</h3>
+                <h3>查看日志：执行任务结束后查看任务的执行过程。</h3>
+                <h3>导入：更新当月的最新的top3000中的应用。</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content " style="height: 100%">
+
+                <div class="">
+<!--                    <div class="col-md-2">-->
+                    <div class="columns pull-left">
+                        <button type="button" style="margin-right:10px;" id="selectReport"
+                                class="btn  btn-primary" onclick="window.location.href ='/manager/report'">
+                            <i aria-hidden="true"></i>查看报告
+                        </button>
+                        <button type="button" style="margin-right:10px;" id="selectLog"
+                                class="btn  btn-primary" onclick="window.location.href ='/manager/logs'">
+                            <i aria-hidden="true"></i>查看日志
+                        </button>
+                        <button id="upload" class="btn  btn-danger">
+                            <i aria-hidden="true"></i>导入
+                        </button>
+
+
+                    </div>
+
+                    <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel5" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"  onclick="load();">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">文件上传</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-md-9 input-group">
+                                        <input id="uploadfile" name="file"  type="file" class="file" >
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary close" align="center" data-dismiss="modal" aria-hidden="true" onclick="load();"> 提交</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal -->
+                    </div>
+                    <div style="width:200px;margin-left: 20px;float:right;" align="center">
+                        <div class="progress" id="progress" style="display: none;">
+                            <div id="progress_bar" class="progress-bar progress-bar-striped active" role="progressbar"
+                                 style="width: 0%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);"
+                                 aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-value" id="progress_value">
+                                    0%
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+<!--                    <div class="col-md-10">-->
+                    <div class="columns pull-right">
+                        <button type="button" style="margin-right:10px;"
+                                class="btn  btn-primary" id="Install" data-toggle="modal" data-target="#myModal_1">
+                            <i aria-hidden="true"></i>安装应用
+                        </button>
+                        <div class="modal fade"  id="myModal_1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div  class="modal-content" style="width:500px;height:300px;margin-top:20%;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true" >×
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel_1" align="center">
+                                            请核对以下条件是否完成确认！
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body" style="width: 550px; margin: 0px auto;font-weight:700">
+                                        <div>
+                                            <label style="font-weight:700"><input name="ball" id="ball1_1" type="checkbox" value="0" align="center" onclick="check_1();">确认执行机是否在线</label>
+                                        </div>
+                                        <div>
+                                            <label style="font-weight:700"><input name="ball" id="ball2_1"type="checkbox" value="1" align="center" onclick="check_1();">确认执行机是否选择正确</label>
+                                        </div>
+                                        <div>
+                                            <label style="font-weight:700"><input name="ball" id="ball3_1" type="checkbox" value="2" align="center" onclick="check_1();">确认所选择执行机上的设备是否连接正常</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div style="text-align:center" >
+                                            <button type="button" style="width:100px;margin-top:10px;" id="confirm_1"  data-dismiss="modal"
+                                                    class="btn  btn-primary" onclick="batchInstall();">确定
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button"
+                                class="btn  btn-danger" id="unInstall" data-toggle="modal" data-target="#myModal_2">
+                            <i aria-hidden="true"></i>卸载应用
+                        </button>
+                        <div class="modal fade" id="myModal_2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+                             <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div  class="modal-content" style="width:500px;height:300px;margin-top:20%;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true" >×
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel_2" align="center">
+                                            请核对以下条件是否完成确认！
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body" style="width: 550px; margin: 0px auto;">
+                                        <div>
+                                            <label><input name="ball" id="ball1_2" type="checkbox" value="0" align="center" onclick="check_2();">确认执行机是否在线</label>
+                                        </div>
+                                        <div>
+                                            <label><input name="ball" id="ball2_2"type="checkbox" value="1" align="center" onclick="check_2();">确认执行机是否选择正确</label>
+                                        </div>
+                                        <div>
+                                            <label><input name="ball" id="ball3_2" type="checkbox" value="2" align="center" onclick="check_2();">确认所选择执行机上的设备是否连接正常</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div style="text-align:center" >
+                                            <button type="button" style="width:100px;margin-top:10px;" id="confirm_2"  data-dismiss="modal"
+                                                    class="btn  btn-primary" onclick="batchUninstall();">确定
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--                    <div class="col-md-6" >-->
+                    <div class=""  style="margin-left:500px;">
+                                <div style="display:inline" >
+                                    <select class='dropdown bootstrap-select' data-live-search="true" id='selectType' name='type'
+                                            onchange="fieldChange();" style="width:120px;height:35px;">
+                                        <option value="null">请选择应用类别</option>
+                                    </select>
+                                </div>
+
+                                <div style="display:inline">
+                                    <select class='dropdown bootstrap-select' data-live-search="true" id='selectField' name='field'
+                                            style="width:120px;height:35px;">
+                                        <option value="null">请选择细分领域</option>
+                                    </select>
+                                </div>
+
+                                <div style="display:inline" >
+                                    <button class="btn btn-success" onclick="reLoad();" id="select">查询</button>
+                                </div>
+
+                                <div style="display:inline">
+                                    <!-- 请选择设备 -->
+                                    <!-- dropdown：下拉式 -->
+                                    <select class='dropdown bootstrap-select' data-live-search="true" id='selectEquip'
+                                            name='equip' style="width:120px;height:35px;">
+                                    </select>
+
+                                </div>
+
+                        </div>
+
+
+                </div>
+    <table id="exampleTable" data-mobile-responsive="true" style="table-layout: fixed;" ></table>
+</div>
+<script type="text/javascript" src="/js/appjs/manager/tools/topApp.js"></script>
+<script type="text/javascript">
+    function move(){
+        var _move=false;//移动标记
+        var _x,_y;//鼠标离控件左上角的相对位置
+        $("#instructionDiv").click(function(){
+            //alert("click");//点击（松开后触发）
+        }).mousedown(function(e){
+            _move=true;
+            _x=e.pageX-parseInt($("#instructionDiv").css("left"));
+            _y=e.pageY-parseInt($("#instructionDiv").css("top"));
+            $("#instructionDiv").fadeTo(20, 0.5);//点击后开始拖动并透明显示
+        });
+        $(document).mousemove(function(e){
+            if(_move){
+                var x=e.pageX-_x;//移动时根据鼠标位置计算控件左上角的绝对位置
+                var y=e.pageY-_y;
+                $("#instructionDiv").css({top:y,left:x});//控件新位置
+            }
+        }).mouseup(function(){
+            _move=false;
+            $("#instructionDiv").fadeTo("fast", 1);//松开鼠标后停止移动并恢复成不透明  "fast":规定褪色效果的速度。
+        });
+    }
+
+    move();
+</script>
+<script type="text/javascript">
+    function move1(){
+        var _move=false;//移动标记
+        var _x,_y;//鼠标离控件左上角的相对位置
+        $("#myModal4").click(function(){
+            //alert("click");//点击（松开后触发）
+        }).mousedown(function(e){
+            _move=true;
+            _x=e.pageX-parseInt($("#myModal4").css("left"));
+            _y=e.pageY-parseInt($("#myModal4").css("top"));
+            // $("#myModal4").fadeTo(20, 0.5);//点击后开始拖动并透明显示
+        });
+        $(document).mousemove(function(e){
+            if(_move){
+                var x=e.pageX-_x;//移动时根据鼠标位置计算控件左上角的绝对位置
+                var y=e.pageY-_y;
+                $("#myModal4").css({top:y,left:x});//控件新位置
+            }
+        }).mouseup(function(){
+            _move=false;
+            // $("#myModal4").fadeTo("fast", 1);//松开鼠标后停止移动并恢复成不透明  "fast":规定褪色效果的速度。
+        });
+    }
+    move1();
+
+</script>
+<script type="text/javascript">
+    $("#uploadfile").fileinput({
+        language: 'zh', //设置语言
+        uploadUrl: "/manager/topAppTools/import", //上传的地址
+        allowedFileExtensions: ['xlsx','xls'],//接收的文件后缀
+        uploadAsync: true, //默认异步上传
+        showUpload: true, //是否显示上传按钮
+
+        showRemove : false, //显示移除按钮
+        showPreview : false, //是否显示预览
+        showCaption: false,//是否显示标题
+        browseClass: "btn", //按钮样式
+        dropZoneEnabled: false,//是否显示拖拽区域
+        maxFileCount: 1, //表示允许同时上传的最大文件个数
+        enctype: 'multipart/form-data',
+        validateInitialCount:true
+    });
+    //异步上传返回结果处理
+    $("#uploadfile").on("fileuploaded", function (event, data, previewId, index) {
+        var response = data.response;
+        alert(response.filePath);
+        $("#fileMd5").val(response.fileMd5);
+        $("#version").val(response.newVersionName);
+        $("#url").val(response.filePath);
+
+    });
+    //上传前
+
+    $('#uploadfile').on('filepreupload', function(event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+    });
+</script>
+<script type="text/javascript">
+function closeModel() {
+    $('#myModal4').modal('hide');
+
+
+}
+</script>
+</body>
+</html>

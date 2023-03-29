@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<script src="/js/jquery.js"></script>
+<link rel="stylesheet" href="/css/plugins/bootstrap-table/bootstrap-table.min.css">
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/css/bootstrap.min.css"></script>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg"  background="/img/blackground.jpg" >
+<div class="wrapper wrapper-content ">
+    <div style="margin-left:5%;margin-top:1%;margin-right:5%;">
+        <h1>工具区</h1>
+        <div>
+            <hr color="＃000000"/>
+        </div>
+    </div>
+    <div class="view">
+        <div class="row">
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" style="background: linear-gradient( 135deg,rgba(30, 144, 255, .5) 20%, transparent 20%);" >
+                    <div>
+                        <font size="4" color="#ffffff">蓝区</font>
+                    </div>
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/heartbeatAndPretestBlueTools'" >
+                            <img src="/img/heartbeat.png" style="width:150px;height:150px;"title="心跳&预测试自动化：
+1、心跳里面的基本功能的自动化执行
+2、预测试里面的基本功能的自动化执行">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">心跳&</h4>
+                        <h4 align="center">预测试(蓝区)</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div>
+                        <font size="4" >暂未使用</font>
+                    </div>
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/heartbeatAndPretestTools'">
+                            <img src="/img/heartbeat.png" style="width:150px;height:150px;"title="心跳&预测试自动化：
+1、心跳里面的基本功能的自动化执行
+2、预测试里面的基本功能的自动化执行">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">心跳&</h4>
+                        <h4 align="center">预测试(自用区)</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" style="background: linear-gradient( 135deg,rgba(30, 144, 255, .5) 20%, transparent 20%);" >
+                    <div>
+                        <font size="4" color="#ffffff">蓝区</font>
+                    </div>
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/upgradeBlueTools'" >
+                            <img src="/img/upgrade.png" style="width:150px;height:150px;"
+                                 title="一键刷机小工具：
+1、实现一键取版本、下载、root、跳过开机向导的自动化
+2、可按照需求选择对应的功能自动化">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">多机升级</h4>
+                        <h4 align="center">(蓝区)</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" style="cursor:pointer" >
+                    <div style="height:25px;">
+
+                    </div>
+                    <div>
+                        <a onclick="window.location.href ='/manager/upgradeTools'" >
+                            <img src="/img/upgrade.png" style="width:150px;height:150px;cursor:pointer"
+                                 title="一键刷机小工具：
+1、实现一键取版本、下载、root、跳过开机向导的自动化
+2、可按照需求选择对应的功能自动化">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">多机升级</h4>
+                        <h4 align="center">(自用区)</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="view">
+        <div class="row">
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style="height:25px;">
+
+                    </div>
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/topAppTools'" >
+                            <img src="/img/top.png" style="width:150px;height:150px;"
+                                 title="实现HW应用市场进行三方apk的搜索、
+下载、安装、卸载的一键操作">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">TopApp</h4>
+                        <h4 align="center">安装卸载</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail"  style="background: linear-gradient( 135deg,rgba(30, 144, 255, .5) 20%, transparent 20%);">
+                    <div>
+                        <font size="4" color="#ffffff">蓝区</font>
+                    </div>
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/cameraStressTools'" >
+                            <img src="/img/cameraStress.png" style="width:150px;height:150px;"title="Camera压测小工具
+1、Camera的前后置不同模式的拍照/录像功能的测试
+2、可单项/多项进行设置后循环跑测
+3、可捕获并记录出现问题后的log以及图片等信息便于开发定位问题">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">Camera</h4>
+                        <h4 align="center">压测(蓝区)</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style="height:25px;">
+                    </div>
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/cameraTools'">
+                            <img src="/img/camera.png" style="width:150px;height:150px;"
+                                 title="Camera主观样张分类导出工具:
+将手机内原相机及三方应用拍摄的照片分类导出至本地目录">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">Camera主观</h4>
+                        <h4 align="center">样张分类导出</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style="height:25px;">
+                    </div>
+                    <div>
+                        <a onclick="window.location.href ='/manager/camera3ATools'" >
+                            <img src="/img/camera3A.png" style="width:150px;height:150px;"
+                                 title="Camera3A拍摄工具
+批量自动拍摄并导出客观3A测试所需样张">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">Camera客观</h4>
+                        <h4 align="center">3A自动拍照</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="view">
+        <div class="row">
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/flare'" >
+                            <img src="/img/carmeraFlare.png" style="width:150px;height:150px;"
+                                 title="（1）将手机中的图片导出为至文件夹并按照样机编号命名
+（2）将手机中的图片按顺序导出至表格，纵向排列">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">Flare</h4>
+                        <h4 align="center">图片导出</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/wifi'" >
+                            <img src="/img/wifii.png" style="width:150px;height:150px;"title="Camera压测小工具
+可执行多场景、多制式、多信道WiFi干扰自动化测试">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">wifi</h4>
+                        <h4 align="center">干扰</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/wifiSignal'" >
+                            <img src="/img/wifiSignal.png" style="width:150px;height:150px;"title="wifi信号测试小工具
+可执行多场景的WiFi信号自动化测试">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">wifi</h4>
+                        <h4 align="center">信号测试</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style=" margin:0 auto;">
+                        <a onclick="window.location.href ='/manager/pwOnOff'" >
+                            <img src="/img/pwOnOff.png" style="width:150px;height:150px;"title="PLC开关机测试小工具
+满足各种PLC开关机自动化测试">
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">PLC</h4>
+                        <h4 align="center">开关机测试</h4>
+                    </div>
+                </div>
+            </div>
+            <!--      <div class="col-md-4" style="width:25%;">
+                      <div class="thumbnail" >
+                          <div style=" margin:0 auto;">
+                              <a onclick="window.location.href ='/manager/cameraTools'">
+                                  <img src="/img/camera.png" style="width:150px;height:150px;"
+                                       title="Camera主观样张分类导出工具:
+      将手机内原相机及三方应用拍摄的照片分类导出至本地目录">
+                              </a>
+                          </div>
+                          <div  style="margin:0 auto;">
+                              <h4 align="center">Camera主观</h4>
+                              <h4 align="center">样张分类导出</h4>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-4" style="width:25%;">
+                      <div class="thumbnail" >
+                          <div>
+                              <a onclick="window.location.href ='/manager/camera3ATools'" >
+                                  <img src="/img/camera3A.png" style="width:150px;height:150px;"
+                                       title="Camera3A拍摄工具
+      批量自动拍摄并导出客观3A测试所需样张">
+                              </a>
+                          </div>
+                          <div  style="margin:0 auto;">
+                              <h4 align="center">Camera客观</h4>
+                              <h4 align="center">3A自动拍照</h4>
+                          </div>
+                      </div>
+                  </div>-->
+        </div>
+    </div>
+
+    <div style="margin-left:5%;margin-top:10%;margin-right:5%;">
+        <h1>下载区</h1>
+        <div>
+            <hr color="＃000000"/>
+        </div>
+    </div>
+    <div class="view">
+        <div class="row">
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style=" margin:0 auto;">
+                        <a  data-name="存储稳定性挂测脚本.zip" id="sdcard">
+                            <!--<a href="/cnce/tools/存储稳定性挂测脚本.zip" download="存储稳定性挂测脚本.zip" >-->
+                            <img src="/img/storage.png" style="width:150px;height:150px;" >
+<!--                                 onclick="download('存储稳定性挂测脚本.zip');">-->
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">存储稳定性</h4>
+                        <h4 align="center">挂测脚本</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="width:25%;">
+                <div class="thumbnail" >
+                    <div style=" margin:0 auto;">
+                        <a data-name="升级掉电机械手挂测工具.zip"   id="powerDown">
+                            <img src="/img/powerDown.png" style="width:150px;height:150px;" ><!--onnclick="download('升级掉电机械手挂测工具.zip');">-->
+                        </a>
+                    </div>
+                    <div  style="margin:0 auto;">
+                        <h4 align="center">升级掉电</h4>
+                        <h4 align="center">机械手挂测</h4>
+                    </div>
+                </div>
+            </div>
+            <!--            <div class="col-md-4" style="width:25%;">-->
+            <!--                <div class="thumbnail" >-->
+            <!--                    <div style=" margin:0 auto;">-->
+            <!--                        <a onclick="window.location.href ='/manager/upgradeBlueTools'" >-->
+            <!--                            <img src="/img/toolicon/upgradeIcon.jpg" style="width:150px;height:150px;"-->
+            <!--                                 title="一键刷机小工具：-->
+            <!--1、实现一键取版本、下载、root、跳过开机向导的自动化-->
+            <!--2、可按照需求选择对应的功能自动化">-->
+            <!--                        </a>-->
+            <!--                    </div>-->
+            <!--                    <div  style="margin:0 auto;">-->
+            <!--                        <h4 align="center">多机升级</h4>-->
+            <!--                        <h4 align="center">(蓝区)</h4>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--            <div class="col-md-4" style="width:25%;">-->
+            <!--                <div class="thumbnail" >-->
+            <!--                    <div style=" margin-left:29.56%;">-->
+            <!--                        <img src="/img/toolicon/upgradeIcon.jpg" style="width:150px;height:150px;"-->
+            <!--                             title="一键刷机小工具：-->
+            <!--1、实现一键取版本、下载、root、跳过开机向导的自动化-->
+            <!--2、可按照需求选择对应的功能自动化">-->
+            <!--                        </a>-->
+            <!--                    </div>-->
+            <!--                    <div  style="margin:0 auto;">-->
+            <!--                        <h4 align="center">多机升级</h4>-->
+            <!--                        <h4 align="center"></h4>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+    </div>
+
+</div>
+<script  type="text/javascript">
+   function download(fileName){
+        // 构造XMLHttpRequest对象
+        var xmlRequest = new XMLHttpRequest();
+        // 发送get请求
+        xmlRequest.open("GET", "/manager/tools/download?fileName="+fileName, true);
+        // 设置响应类型
+        xmlRequest.responseType = "blob";
+        // 发送请求
+        xmlRequest.send([]);
+
+        // 请求获得响应之后,触发下面的回调函数
+        xmlRequest.onload = function(oEvent) {
+            // 当时满足下面的状态码的时候,视为下载成功
+            if ((xmlRequest.status >= 200 && xmlRequest.status < 300) || xmlRequest.status === 304) {
+
+                // 从xmlRequest对象中获取响应的内容
+                var content = xmlRequest.response;
+
+                /*
+                	从xmlRequest的响应头中获取文件名字符串
+                	因为我们将文件以流的形式返回前端,返回的文件没有文件名
+                	因此在后端处理的时候,我们将文件名放到响应头中
+                	然后在前端从响应头中获取文件名
+				*/
+                var dispositionStr = xmlRequest.getResponseHeader('content-disposition');
+                if (dispositionStr == null || dispositionStr === "") {
+                    alert("下载失败!");
+                    return;
+                }
+
+				// 获取文件名
+                let dispositionArr = dispositionStr.split(";");
+                // 我们的文件名可能含有汉字,因此在后端进行了UTF-8编码处理,此处进行解码
+                let fileName = decodeURIComponent(dispositionArr[1]);
+
+                // 利用response的响应内容构造一个Blob对象(通过Blob对象进行下载)
+                var blob = new Blob([content]);
+
+                // 创建一个隐藏的用来下载文件的a标签
+                var elink = document.createElement('a');
+                elink.download = fileName;
+                elink.style.display = 'none';
+
+                /*
+                	将blob文件对象转换为内存中对象,并将生成的对象赋给隐藏的a标签
+                	bolb对象会暂时存储在客户端的内存中,
+                	使用URL.createObjectURL()方法可以创建指向内存文件对象的临时url
+                	使用createObjectURL可以节省性能并更快速,只不过需要在不使用的情况下手动释放内存
+                	FileReader.readAsDataURL返回文件的base64字符串，比blob url消耗更多内存，但是在不用的时候会自动从内存中清除（通过垃圾回收机制）
+				*/
+                const src = URL.createObjectURL(blob);
+                elink.href = src;
+                document.body.appendChild(elink);
+
+                // 模拟点击下载事件,进行下载
+                elink.click();
+
+                // 点击之后,移除我们定义的隐藏a标签
+                document.body.removeChild(elink);
+
+                // 移除文件对象
+                URL.revokeObjectURL(src)
+            }
+        }
+}
+</script>
+</body>
+</html>

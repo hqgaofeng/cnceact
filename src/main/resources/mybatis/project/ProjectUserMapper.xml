@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.manpower.dao.ProjectUserDao">
+    <select id="get" resultType="com.cnce.project.manpower.domain.ProjectUserDO">
+        select * from project_user_info where user_id = #{value}
+    </select>
+
+    <select id="getUserByJobNo" resultType="com.cnce.project.manpower.domain.ProjectUserDO">
+        select * from project_user_info where job_no = #{jobNo}
+    </select>
+
+    <!--通过地域查询一级部门-->
+    <select id="getDepartment" resultType="com.cnce.project.manpower.domain.ProjectUserDO">
+        SELECT DISTINCT(department) FROM project_user_info WHERE region = #{region}
+    </select>
+
+    <!--通过地域和一级部门查询二级部门-->
+    <select id="getDomain" resultType="com.cnce.project.manpower.domain.ProjectUserDO">
+        SELECT DISTINCT(domain) FROM project_user_info WHERE region = #{region} AND department = #{department}
+    </select>
+
+
+    <select id="list" resultType="com.cnce.project.manpower.domain.ProjectUserDO">
+        select * from project_user_info
+        <where>
+            <if test="userName != null and userName != ''"> and username = #{userName} </if>
+            <if test="account != null and account != ''"> and account = #{account} </if>
+            <if test="jobNo != null and jobNo != ''"> and job_no = #{jobNo} </if>
+            <if test="password!= null and password != ''"> and password= #{password} </if>
+            <if test="email != null and email != ''"> and email = #{email} </if>
+            <if test="region != null and region != ''"> and region = #{region} </if>
+            <if test="department != null and department != ''"> and department = #{department} </if>
+            <if test="domain != null and domain != ''"> and domain = #{domain} </if>
+            <if test="userStatus != null and userStatus != ''"> and user_status = #{userStatus} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+            <if test="userStatus != '1'"> and user_status != '1' </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by user_id asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+
+    <select id="count" resultType="int">
+        select count(*) from project_user_info
+        <where>
+            <if test="userName != null and userName != ''"> and username = #{userName} </if>
+            <if test="account != null and account != ''"> and account = #{account} </if>
+            <if test="jobNo != null and jobNo != ''"> and job_no = #{jobNo} </if>
+            <if test="password != null and password != ''"> and password = #{password} </if>
+            <if test="email != null and email != ''"> and email = #{email} </if>
+            <if test="region != null and region != ''"> and region = #{region} </if>
+            <if test="department != null and department != ''"> and department = #{department} </if>
+            <if test="domain != null and domain != ''"> and domain = #{domain} </if>
+            <if test="userStatus != null and userStatus != ''"> and user_status = #{userStatus} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.manpower.domain.ProjectUserDO" useGeneratedKeys="true" keyProperty="userId">
+        insert into project_user_info
+        (
+        `username`,
+        `account`,
+        `job_no`,
+         password,
+        `email`,
+        `region`,
+        `department`,
+        `domain`,
+        `user_status`,
+        `create_time`
+        )
+        values
+        (
+        #{userName},
+        #{account},
+        #{jobNo},
+        #{password},
+        #{email},
+        #{region},
+        #{department},
+        #{domain},
+        #{userStatus},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.cnce.project.manpower.domain.ProjectUserDO">
+        update project_user_info
+        <set>
+            <if test="userName != null"> `username` = #{userName},</if>
+            <if test="account != null"> `account` = #{account},</if>
+            <if test="email != null"> `email` = #{email},</if>
+            <if test="region != null"> `region` = #{region},</if>
+            <if test="department != null"> `department` = #{department},</if>
+            <if test="domain != null"> `domain` = #{domain},</if>
+            <if test="userStatus != null"> `user_status` = #{userStatus},</if>
+            <if test="createTime != null"> `create_time` = #{createTime}</if>
+        </set>
+        where job_no = #{jobNo}
+    </update>
+
+    <insert id="saveUsers" parameterType="com.cnce.project.manpower.domain.ProjectUserDO">
+        insert into project_user_info (`username`,
+        `account`,
+        `job_no`,
+        `email`,
+        `region`,
+        `department`,
+        `domain`,
+        `user_status`,
+        `create_time`)
+        values
+        <foreach collection="list" item="item" separator="," close=";">
+            (
+            #{item.userName},
+            #{item.account},
+            #{item.jobNo},
+            #{item.email},
+            #{item.region},
+            #{item.department},
+            #{item.domain},
+            #{item.userStatus},
+            #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.business.dao.BaselineDao">
+
+	<select id="get" resultType="com.cnce.project.business.domain.BaselineDO">
+		select t.bid,t.scope,t.module,t.baseline,t.create_time from test_baseline t
+		where t.bid = #{value}
+	</select>
+
+	<select id="loadModules" resultType="java.lang.String">
+        select DISTINCT(module) from test_baseline
+    </select>
+
+	<select id="getModuleByName" resultType="com.cnce.project.business.domain.BaselineDO">
+        SELECT `bid`,`scope`,`module`,`baseline`,`create_time`
+        FROM test_baseline
+        WHERE module = #{module}
+        order BY bid desc LIMIT 1
+    </select>
+
+	<select id="list" resultType="com.cnce.project.business.domain.BaselineDO">
+		select `bid`,`scope`,`module`,`baseline`,`create_time` from test_baseline
+        <where>  
+			<if test="bId != null and bId != ''"> and bid = #{bId} </if>
+			<if test="scope != null and scope != ''"> and scope = #{scope} </if>
+			<if test="module != null and module != ''"> and module = #{module} </if>
+			<if test="baseline != null and baseline != ''"> and baseline = #{baseline} </if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by bid asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from test_baseline
+		<where>
+			<if test="bId != null and bId != ''"> and bid = #{bId} </if>
+			<if test="scope != null and scope != ''"> and scope = #{scope} </if>
+			<if test="module != null and module != ''"> and module = #{module} </if>
+			<if test="baseline != null and baseline != ''"> and baseline = #{baseline} </if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cnce.project.business.domain.BaselineDO" useGeneratedKeys="true" keyProperty="bId">
+		insert into test_baseline
+		(
+			`scope`,
+			`module`,
+			`baseline`,
+			`create_time`
+		)
+		values
+		(
+			#{scope},
+			#{module},
+			#{baseline},
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cnce.project.business.domain.BaselineDO">
+		update test_baseline
+		<set>
+			<if test="scope != null">`scope` = #{scope}, </if>
+			<if test="module != null">`module` = #{module}, </if>
+			<if test="baseline != null">`baseline` = #{baseline}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where bid = #{bId}
+	</update>
+	
+	<delete id="remove">
+		delete from test_baseline where bid = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from test_baseline where bid in
+		<foreach item="bId" collection="array" open="(" separator="," close=")">
+			#{bId}
+		</foreach>
+	</delete>
+
+	<insert id="batchImportBaseline" parameterType="java.util.List">
+		insert into test_baseline (scope, module, baseline, create_time)
+		values
+		<foreach item="item" collection="list" separator=",">
+			(
+			#{item.scope},
+			#{item.module},
+			#{item.baseline},
+			#{item.createTime}
+			)
+		</foreach>
+	</insert>
+
+</mapper>
