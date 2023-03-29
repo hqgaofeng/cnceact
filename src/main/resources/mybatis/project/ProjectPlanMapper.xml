@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.project.dao.ProjectPlanDao">
+
+    <select id="get" resultType="com.cnce.project.project.domain.ProjectPlanDO">
+		select t.plan_id,t.pid,t.p_name,t.plan_name,t.pro_plan,t.plan_start_time,t.plan_end_time,t.test_cycle,t.total_power,t.create_time
+		from test_project_plan t
+		where t.plan_id = #{value}
+	</select>
+
+    <select id="loadProjectPlan" resultType="java.lang.String">
+        select DISTINCT(plan_name) from test_project_plan order by plan_id desc
+    </select>
+
+    <select id="getProjectByPlan" resultType="com.cnce.project.project.domain.ProjectPlanDO">
+        select * FROM test_project_plan WHERE plan_name = #{planName} LIMIT 1
+    </select>
+
+    <select id="list" resultType="com.cnce.project.project.domain.ProjectPlanDO">
+        select `plan_id`,`pid`, `p_name`,`plan_name`,`pro_plan`,`plan_start_time`,`plan_end_time`,`test_cycle`,`total_power`,`written`,`create_time`
+        from test_project_plan
+        <where>
+            <if test="planId != null and planId != ''"> and plan_id = #{planId} </if>
+            <if test="pId != null and pId != ''"> and pid = #{pId} </if>
+            <if test="pName != null and pName != ''"> and p_name = #{pName} </if>
+            <if test="planName != null and planName != ''"> and plan_name = #{planName} </if>
+            <if test="proPlan != null and proPlan != ''"> and pro_plan = #{proPlan} </if>
+            <if test="planStartTime != null and planStartTime != ''"> and plan_start_time = #{planStartTime} </if>
+            <if test="planEndTime != null and planEndTime != ''"> and plan_end_time = #{planEndTime} </if>
+            <if test="testCycle != null and testCycle != ''"> and test_cycle = #{testCycle} </if>
+            <if test="totalPower != null and totalPower != ''"> and total_power = #{totalPower} </if>
+            <if test="written != null and written != ''"> and written = #{written} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by plan_id asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_project_plan
+        <where>
+            <if test="planId != null and planId != ''"> and plan_id = #{planId} </if>
+            <if test="pId != null and pId != ''"> and pid = #{pId} </if>
+            <if test="pName != null and pName != ''"> and p_name = #{pName} </if>
+            <if test="planName != null and planName != ''"> and plan_name = #{planName} </if>
+            <if test="proPlan != null and proPlan != ''"> and pro_plan = #{proPlan} </if>
+            <if test="planStartTime != null and planStartTime != ''"> and plan_start_time = #{planStartTime} </if>
+            <if test="planEndTime != null and planEndTime != ''"> and plan_end_time = #{planEndTime} </if>
+            <if test="testCycle != null and testCycle != ''"> and test_cycle = #{testCycle} </if>
+            <if test="totalPower != null and totalPower != ''"> and total_power = #{totalPower} </if>
+            <if test="written != null and written != ''"> and written = #{written} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.project.domain.ProjectPlanDO" useGeneratedKeys="true" keyProperty="planId">
+		insert into test_project_plan
+		(
+			`pid`,
+			`p_name`,
+			`plan_name`,
+			`pro_plan`,
+			`plan_start_time`,
+			`plan_end_time`,
+			`test_cycle`,
+			`total_power`,
+			`written`,
+			`create_time`
+		)
+		values
+		(
+			#{pId},
+			#{pName},
+			#{planName},
+			#{proPlan},
+			#{planStartTime},
+			#{planEndTime},
+			#{testCycle},
+			#{totalPower},
+			#{written},
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.cnce.project.project.domain.ProjectPlanDO">
+        update test_project_plan
+        <set>
+            <if test="pId != null">`pid` = #{pId}, </if>
+            <if test="pName != null">`p_name` = #{pName}, </if>
+            <if test="planName != null">`plan_name` = #{planName}, </if>
+            <if test="proPlan != null">`pro_plan` = #{proPlan}, </if>
+            <if test="planStartTime != null">`plan_start_time` = #{planStartTime}, </if>
+            <if test="planEndTime != null">`plan_end_time` = #{planEndTime}, </if>
+            <if test="testCycle != null">`test_cycle` = #{testCycle}, </if>
+            <if test="totalPower != null">`total_power` = #{totalPower}, </if>
+            <if test="written != null">`written` = #{written}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where plan_id = #{planId}
+    </update>
+
+    <delete id="remove">
+		delete from test_project_plan where plan_id = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from test_project_plan where plan_id in
+        <foreach item="planId" collection="array" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+    </delete>
+
+</mapper>

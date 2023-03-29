@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.system.dao.RequirementDao">
+
+	<select id="get" resultType="com.cnce.system.domain.RequirementDO">
+		select * from sys_require where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.cnce.system.domain.RequirementDO">
+		select * from sys_require r
+        <where>  
+			<if test="id != null and id != ''"> and r.id = #{id} </if>
+			<if test="type != null and type != ''"> and r.type = #{type} </if>
+			<if test="status != null and status != ''"> and r.status = #{status} </if>
+			<if test="describe != null and describe != ''"> and r.describe = #{describe} </if>
+			<if test="sponsor != null and sponsor != ''"> and r.sponsor = #{sponsor} </if>
+			<if test="remark != null and remark != ''"> and r.remark = #{remark} </if>
+			<if test="expectTime != null and expectTime != ''"> and r.expect_time = #{expectTime} </if>
+			<if test="createTime != null and createTime != ''"> and r.create_time = #{createTime} </if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from sys_require r
+		<where>
+			<if test="id != null and id != ''"> and r.id = #{id} </if>
+			<if test="type != null and type != ''"> and r.type = #{type} </if>
+			<if test="status != null and status != ''"> and r.status = #{status} </if>
+			<if test="describe != null and describe != ''"> and r.describe = #{describe} </if>
+			<if test="sponsor != null and sponsor != ''"> and r.sponsor = #{sponsor} </if>
+			<if test="expectTime != null and expectTime != ''"> and r.expect_time = #{expectTime} </if>
+			<if test="createTime != null and createTime != ''"> and r.create_time = #{createTime} </if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cnce.system.domain.RequirementDO" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_require
+		(
+			`type`,
+			`status`,
+			`describe`,
+			`sponsor`,
+			`remark`,
+			`expect_time`,
+			`create_time`
+		)
+		values
+		(
+			#{type},
+			#{status},
+			#{describe},
+			#{sponsor},
+			#{remark},
+			#{expectTime},
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cnce.system.domain.RequirementDO">
+		update sys_require r
+		<set>
+			<if test="type != null"> r.type = #{type}, </if>
+			<if test="status != null"> r.status = #{status}, </if>
+			<if test="describe != null"> r.describe = #{describe}, </if>
+			<if test="sponsor != null"> r.sponsor = #{sponsor}, </if>
+			<if test="remark != null"> r.remark = #{remark}, </if>
+			<if test="expectTime != null"> r.expect_time = #{expectTime}, </if>
+			<if test="createTime != null"> r.create_time = #{createTime} </if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from sys_require where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sys_require where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnce.manager.tools.dao.EquipDao">
+
+    <select id="getNameByDeptId" resultType="com.cnce.manager.tools.domain.EquipDO">
+        SELECT computer_alias,computer_ip FROM test_device WHERE dept_id=#{value}
+    </select>
+
+</mapper>

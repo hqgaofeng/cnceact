@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.template.dao.TemplateDao">
+    <select id="get" resultType="com.cnce.project.template.domain.TemplateDO">
+        select * from project_manage_info where pro_id = #{value}
+    </select>
+
+
+
+    <select id="loadMonth" resultType="java.lang.String">
+        SELECT DISTINCT(m.effect_month)
+        FROM project_info AS p, project_manage_info AS m
+        WHERE p.jira_id = m.jira_id
+          AND p.p_status = '1'
+          AND STR_TO_DATE(CONCAT(m.effect_month, '-01'), '%Y-%c-%e') >= DATE_FORMAT(NOW(), '%Y-%c-01')
+        ORDER BY STR_TO_DATE(CONCAT(m.effect_month, '-01'), '%Y-%c-%e');
+    </select>
+
+
+
+
+
+    <select id="getProjectByName" resultType="String">
+        select p_name FROM project_info WHERE jira_id = #{JiraId}
+    </select>
+
+    <select id="loadProject" resultType="java.lang.String">
+        SELECT
+          DISTINCT(p.p_name)
+        FROM
+          project_info AS p,
+          project_manage_info AS m
+        WHERE
+          p.jira_id = m.jira_id
+          AND p.p_status = '1'
+          AND p.region = #{region}
+    </select>
+
+    <select id="getProjectByMonth" resultType="com.cnce.project.template.domain.TemplateDO">
+        select * FROM project_info WHERE effect_month = #{effectMonth} and p_name = #{pName} and region = #{region}
+    </select>
+
+
+    <select id="list" resultType="com.cnce.project.template.domain.TemplateDO">
+        SELECT
+        m.pro_id,
+        p.jira_id,
+        p.p_name,
+        p.region,
+        m.p_level,
+        m.effect_month
+        FROM
+        project_info AS p,
+        project_manage_info AS m
+    <where>
+        p.jira_id = m.jira_id
+        <if test="pName != null and pName !=''">and p.p_name = #{pName}</if>
+        <if test="region != null and region !=''">and p.region = #{region}</if>
+        <if test="effectMonth != null and effectMonth !=''">and m.effect_month = #{effectMonth}</if>
+    </where>
+    <choose>
+        <when test="sort != null and sort.trim() != ''">
+            order by ${sort} ${order}
+        </when>
+        <otherwise>
+            order by m.pro_id desc
+        </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+        limit #{offset},#{limit}
+    </if>
+</select>
+
+
+
+    <select id="getProjectList" resultType="com.cnce.project.template.domain.TemplateDO">
+        SELECT
+        m.pro_id,
+        p.jira_id,
+        p.p_name,
+        p.region,
+        m.p_level,
+        m.effect_month
+        FROM
+        project_info AS p,
+        project_manage_info AS m
+        <where>
+            p.jira_id = m.jira_id
+            <if test="pName != null and pName !=''">
+                AND #{pName,jdbcType=VARCHAR} = p.p_name
+            </if>
+            <if test="region != null and region !=''">
+                AND #{region,jdbcType=VARCHAR} = p.region
+            </if>
+            <if test="effectMonth != null and effectMonth !=''">
+                AND #{effectMonth,jdbcType=VARCHAR} = m.effect_month
+            </if>
+        </where>
+        ORDER BY m.p_level ASC
+    </select>
+
+
+
+    <select id="getTemplate" resultType="com.cnce.project.template.domain.TemplateDO">
+        select * from project_manage_info
+        <where>
+            <if test="JiraId != null and JiraId !=''">and jira_id = #{JiraId}</if>
+
+            <if test="effectMonth != null and effectMonth !=''">and effect_month = #{effectMonth}</if>
+        </where>
+    </select>
+    
+    <select id="count" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        project_info AS p,
+        project_manage_info AS m
+        <where>
+            p.jira_id = m.jira_id
+            <if test="pName != null and pName !=''">and p.p_name = #{pName}</if>
+            <if test="region != null and region !=''">and p.region = #{region}</if>
+            <if test="effectMonth != null and effectMonth !=''">and m.effect_month = #{effectMonth}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.template.domain.TemplateDO" useGeneratedKeys="true" keyProperty="proId">
+        insert into project_manage_info
+        (
+        `jira_id`,
+        `p_level`,
+        `effect_month`,
+        `create_time`
+        )
+        value
+        (
+        #{JiraId},
+        #{pLevel},
+        #{effectMonth},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.cnce.project.template.domain.TemplateDO">
+        update project_manage_info
+        <set>
+            <if test="JiraId != null"> `jira_id` = #{JiraId},</if>
+            <if test="pLevel != null"> `p_level` = #{pLevel},</if>
+            <if test="effectMonth != null"> `effect_month` = #{effectMonth},</if>
+            <if test="createTime != null"> `create_time` = #{createTime}</if>
+        </set>
+        where pro_id = #{proId}
+    </update>
+
+    <delete id="remove">
+        delete from project_manage_info where pro_id = #{proId}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from project_manage_info where pro_id in
+        <foreach item="proId" collection="array" open="(" separator=","
+                 close=")">
+            #{proId}
+        </foreach>
+    </delete>
+
+</mapper>

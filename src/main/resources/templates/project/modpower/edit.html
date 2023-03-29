@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox-content">
+					<form class="form-horizontal m-t" id="signupForm">
+						<input id="meId" name="meId" th:value="${temp.meId}"
+							type="hidden">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">模块：</label>
+							<div class="col-sm-8">
+								<input id="modName" name="modName" class="form-control" th:value="${temp.modName}" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">人员：</label>
+							<div class="col-sm-8">
+								<input id="staffName" name="staffName" list="select_staff" placeholder="输入或者列表选择" th:value="${temp.staffName}" class="form-control select" style="width: 100%;"/>
+								<datalist id="select_staff" class="select_staff" style="width: 100%;">
+								</datalist>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">项目：</label>
+							<div class="col-sm-8">
+								<input id="proName" name="proName" list="select_project" placeholder="输入或者列表选择" th:value="${temp.proName}" class="form-control select" style="width: 100%;"/>
+								<datalist id="select_project" class="select_project" style="width: 100%;">
+								</datalist>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">日期：</label>
+							<div class="col-sm-8">
+								<input id="planDate" name="planDate"
+									   onClick="return Calendar('planDate');" class="form-control" type="text" th:value="${temp.planDate}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">计划人力：</label>
+							<div class="col-sm-8">
+								<input id="planManpower" name="planManpower" class="form-control" th:value="${temp.planManpower}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">实际人力：</label>
+							<div class="col-sm-8">
+								<input id="actualManpower" name="actualManpower" class="form-control" th:value="${temp.actualManpower}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">变动人力：</label>
+							<div class="col-sm-8">
+								<input id="changeManpower" name="changeManpower" class="form-control" th:value="${temp.changeManpower}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">备注：</label>
+							<div class="col-sm-8">
+								<input id="remark" name="remark" class="form-control" th:value="${temp.remark}">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-8 col-sm-offset-3">
+								<button type="submit" class="btn btn-primary">提交</button>
+								<button type="button" class="btn btn-primary" onclick="closeSelf();">关闭</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/project/modpower/edit.js"></script>
+	<script type="text/javascript" src="/js/appjs/manager/showdate.js"></script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+>
+
+<!--<link href="/static/css/bootstrap.min.css" rel="stylesheet">-->
+<link href="/css/ball.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" />
+<script src="/js/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!--<script src="/static/js/bootstrap.min.js"></script>-->
+
+<!--&lt;!&ndash; 新 Bootstrap 核心 CSS 文件 &ndash;&gt;-->
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+<!--&lt;!&ndash;&lt;!&ndash; jQuery文件。务必在bootstrap.min.js 之前引入 &ndash;&gt;&ndash;&gt;-->
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+<!--&lt;!&ndash;&lt;!&ndash; 最新的 Bootstrap 核心 JavaScript 文件 &ndash;&gt;&ndash;&gt;-->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+
+<meta charset="utf-8">
+<head th:include="include :: header">
+    <style>
+        /* 弹窗 (background) */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定定位 */
+            z-index: 1; /* 设置在顶层 */
+            left: 0;
+            top: 0;
+            width: 70%;
+            height: 50%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        /* 弹窗内容 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* 关闭按钮 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .progress{
+            background: #262626;
+            border-radius: 20px;
+            height: 20px;
+            border-top: 1px solid #000;
+            box-shadow: 0 5px 4px -6px #aaa;
+            margin-top: 50px;
+            overflow: visible;
+        }
+        .progress .progress-bar{
+            border-radius: 20px;
+            position: relative;
+            animation: animate-positive 2s;
+        }
+        .progress .progress-bar:after{
+            content: "\f111";
+            font-family: fontawesome;
+            font-size: 10px;
+            color: rgba(0,0,0,0.4);
+            position: absolute;
+            top: -1px;
+            right: 10px;
+        }
+        .progress .progress-value{
+            display: block;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            padding: 3px 8px;
+            background:#191919;
+            position: absolute;
+            top: -40px;
+            right: -27px;
+        }
+        .progress .progress-value:after{
+            content: "";
+            border-top: 5px solid #191919;
+            border-left: 5px solid #191919;
+            border-bottom: 5px solid transparent ;
+            border-right: 5px solid transparent;
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+        }
+        @-webkit-keyframes animate-positive{
+            0% { width: 0%; }
+        }
+        @keyframes animate-positive{
+            0% { width: 0%; }
+        }
+        .modal-dialog {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .modal-content {
+            overflow-y: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-body {
+            overflow-y: scroll;
+            position: absolute;
+            top: 55px;
+            bottom: 65px;
+            width: 100%;
+        }
+
+        .modal-header .close {margin-right: 15px;}
+
+        .modal-footer {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+
+    </style>
+</head>
+<body class="gray-bg" background="/img/blackground.jpg">
+
+<div class="modal fade" id="myModal9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content" style="margin-top:20%">
+            <div class="modal-body"  style="margin-left:35%">
+                当前节点不在线，请启动当前节点！！！
+            </div>
+            <div style="margin-left:45%;margin-bo:10%;margin-bottom: 5%;">
+                <button type="button"
+                        data-dismiss="modal">确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="wrapper wrapper-content " style="height: 100%; overflow: auto;">
+    <div class="col-sm-12">
+        <div class="ibox" style="margin-left:100px;margin-top:50px;">
+
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-left" >
+                            <h3 style="margin-left:50px;margin-top:8px;" >本地版本路径:</h3>
+                    </div>
+                    <div class="columns pull-left" style="margin-left:10px;">
+<!--                            <input id="localPath" type="text" value="请输入版本路径" style="width: 800px;height:25px;"/>-->
+                        <input id="localPath" style="width:800px;margin-left:10px;height:25px;" type="text" placeholder="请输入导出路径">
+                        <span id="warning" style="color:red;display:none;">请输入合法的导出路径</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox" style="margin-left:100px;">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-left" >
+                        <h3 style="margin-left:50px;margin-top:15px;" >平台类型选择:</h3>
+                    </div>
+                    <div class="columns pull-left" style="margin-left:10px;">
+                        <div class="form-check" style="margin-left:150px;margin-top:10px;">
+                            <input type="radio" class="form-check-input" id="platformTypeQ" name="platformType" value="Qualcomm" checked>Qualcomm
+                            <label class="form-check-label" for="platformTypeQ"></label>
+                        </div>
+                    </div>
+                    <div class="columns pull-left" style="margin-left:10px;">
+                        <div class="form-check"style="margin-left:270px;margin-top:10px;">
+                            <input type="radio" class="form-check-input" id="platformTypeM" name="platformType" value="MTK" checked>MTK
+                            <label class="form-check-label" for="platformTypeM"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox" style="margin-left:100px;">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-left" >
+                        <h3 style="margin-left:50px;margin-top:15px;" >版本类型选择:</h3>
+                    </div>
+                    <div class="columns pull-left" style="margin-left:10px;">
+                        <div class="form-check" style="margin-left:150px;margin-top:10px;">
+                            <input type="radio" class="form-check-input" id="packTypeO" name="packType" value="odex" checked>odex
+                            <label class="form-check-label" for="packTypeO"></label>
+                        </div>
+                    </div>
+                    <div class="columns pull-left" style="margin-left:10px;">
+                        <div class="form-check" style="margin-left:310px;margin-top:10px;">
+                            <input type="radio" class="form-check-input" id="packTypeN" name="packType" value="no_log" checked>no_log
+                            <label class="form-check-label" for="packTypeN"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox" style="margin-left:150px;margin-top:15px;">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pull-left" >
+                        <h3 style="margin-top:8px;" >执行设备选择:</h3>
+                    </div>
+                    <div class="dropdown columns pull-left">
+                        <select class='dropdown bootstrap-select' data-live-search="true" id='selectEquip' name='equip'
+                                style="width:150px;height:30px;margin-left:10px;">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox" style="margin-left:150px;margin-top:100px;">
+            <div class="row">
+                <div class="col-md-2">
+<!--                    <button type="button" onchange="checkIsNull()" style="margin-right:10px;width:150px;margin-top:10px;"-->
+<!--                            class="btn  btn-primary"  id="onlyUpgrade"  data-toggle="modal" data-target="#myModal">-->
+<!--                        <i aria-hidden="true"></i>仅升级-->
+<!--                    </button>-->
+                    <button type="button" onclick="checkIsNull()" style="margin-right:10px;width:150px;margin-top:10px;"
+                            class="btn  btn-primary"  id="onlyUpgrade"  >
+                        <i aria-hidden="true"></i>仅升级
+                    </button>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div  class="modal-content" style="width:500px;height:300px;margin-top:20%;">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true" >×
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel" align="center">
+                                        请核对以下条件是否完成确认！
+                                    </h4>
+                                </div>
+                                <div class="modal-body" style="width: 550px; margin: 0px auto;">
+                                    <div>
+                                        <label><input name="ball" id="ball1" type="checkbox" value="0" align="center" onclick="check();">确认执行机是否在线</label>
+                                    </div>
+                                    <div>
+                                        <label><input name="ball" id="ball2"type="checkbox" value="1" align="center" onclick="check();">确认执行机是否选择正确</label>
+                                    </div>
+                                    <div>
+                                        <label><input name="ball" id="ball3" type="checkbox" value="2" align="center" onclick="check();">确认所选择执行机上的设备是否连接正常</label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div style="text-align:center" >
+                                        <button type="button" style="width:100px;margin-top:10px;" id="confirm"  data-dismiss="modal"
+                                                class="btn  btn-primary" onclick="onlyUpgrade();">确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <button type="button" style="width:150px;margin-left:225px;margin-top:10px;"
+                            class="btn  btn-primary" onclick="checkIsNull1()" id="upgradeAndRoot" >
+                        <i aria-hidden="true"></i>升级+Root
+                    </button>
+                    <div class="modal fade" id="myModal_2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div  class="modal-content" style="width:500px;height:300px;margin-top:20%">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true" >×
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel_2" align="center">
+                                        请核对以下条件是否完成确认！
+                                    </h4>
+                                </div>
+                                <div class="modal-body" style="width: 550px; margin: 0px auto;">
+                                    <div>
+                                        <label><input name="ball" id="ball1_2" type="checkbox" value="0" align="center" onclick="check_2();">确认执行机是否在线</label>
+                                    </div>
+                                    <div>
+                                        <label><input name="ball" id="ball2_2"type="checkbox" value="1" align="center" onclick="check_2();">确认执行机是否选择正确</label>
+                                    </div>
+                                    <div>
+                                        <label><input name="ball" id="ball3_2" type="checkbox" value="2" align="center" onclick="check_2();">确认所选择执行机上的设备是否连接正常</label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div style="text-align:center" >
+                                        <button type="button" style="width:100px;margin-top:10px;" id="confirm_2"  data-dismiss="modal" data-target="#myModal_2"
+                                                class="btn  btn-primary" onclick="upgradeAndRoot();">确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button" style="margin-right:10px;width:150px;margin-left:225px;margin-top:10px;"
+                            class="btn  btn-primary" onclick="checkIsNull2()" id="skipWizard">
+                        <i aria-hidden="true"></i>跳过开机向导
+                    </button>
+                    <div class="modal fade" id="myModal_3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div  class="modal-content" style="width:500px;height:300px;margin-top:20%">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true" >×
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel_3" align="center">
+                                        请核对以下条件是否完成确认！
+                                    </h4>
+                                </div>
+                                <div class="modal-body" style="width: 550px; margin: 0px auto;">
+                                    <div>
+                                        <label><input name="ball" id="ball1_3" type="checkbox" value="0" align="center" onclick="check_3();">确认执行机是否在线</label>
+                                    </div>
+                                    <div>
+                                        <label><input name="ball" id="ball2_3"type="checkbox" value="1" align="center" onclick="check_3();">确认执行机是否选择正确</label>
+                                    </div>
+                                    <div>
+                                        <label><input name="ball" id="ball3_3" type="checkbox" value="2" align="center" onclick="check_3();">确认所选择执行机上的设备是否连接正常</label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div style="text-align:center" >
+                                        <button type="button" style="width:100px;margin-top:10px;" id="confirm_3"  data-dismiss="modal" data-target="#myModal_2"
+                                                class="btn  btn-primary" onclick="skipWizard();">确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="ibox" style="margin-left:100px;margin-top:30px;width:900px;">
+            <div class="progress" id="progress" style="display: none;">
+                <div id="progress_bar" class="progress-bar progress-bar-striped active" role="progressbar"
+                     style="width: 0%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);"
+                     aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-value" id="progress_value">
+                        0%
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="float:right;position: absolute;margin-left: 5%; margin-top:1%;" id="instructionDiv">
+        <img src="/img/InstructionBook.png " style="width:100px;" type="button"
+             class="btn " data-toggle="modal" data-target="#myModal1">
+        <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="false" data-keyboard="false" >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div  class="modal-content" style="width:700px;height:500px;margin-top:20%;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true" >×
+                        </button>
+                        <h1 class="modal-title" id="myModalLabel1" align="center">
+                            多机升级工具使用说明书
+                        </h1>
+                    </div>
+                        <div class="modal-body" style="width: 650px; margin: 0px auto;overflow-y: scroll;">
+                            <h3>该工具为自用区升级设备版本使用，该工具包含三个功能，</h3>
+                            <h3>具体功能使用如下：</h3>
+                            <h3>1.仅升级：需要填写的参数包括本地版本路径（存放目标版本的路径），</h3>
+                            <h3>平台类型（设备芯片的类型），版本类型（需要升级的设备的版本odex</h3>
+                            <h3>或no_log），执行设备（设备连接的电脑）。</h3>
+                            <h3>该功能只是实现版本的正常升级操作。</h3>
+                            <h3>2.升级+root：需要填写的参数包括本地版本路径（存放目标版本的路径）,</h3>
+                            <h3>平台类型（设备芯片的类型），版本类型（需要升级的设备的版本odex或</h3>
+                            <h3>no_log），执行设备（设备连接的电脑）。</h3>
+                            <h3>该功能实现版本的升级和root以及跳过开机向导等操作。</h3>
+                            <h3>3.跳过开机向导：该功能只需选择执行设备（设备连接的电脑），</h3>
+                            <h3>该功能适用于已经root的手机回复出厂之后的adb授权的设备</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h5 align="center">工具说明书</h5>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="/js/appjs/manager/tools/upgrade.js"></script>
+<script>
+    $(function() {
+        $( "#myModal1" ).draggable();
+    });
+</script>
+<script>
+    $(function() {
+        $( "#instructionDiv" ).draggable();
+    });
+</script>
+
+
+
+</html>

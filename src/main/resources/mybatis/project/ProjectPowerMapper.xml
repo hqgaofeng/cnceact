@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.project.dao.ProjectPowerDao">
+
+    <select id="list" resultType="com.cnce.project.project.domain.ProjectPowerDO">
+        SELECT
+        tm.mod_name,
+        tm.pro_name,
+        tp.total_power,
+        te.plan_date,
+        te.staff_name,
+        te.actual_manpower,
+        te.create_time
+        FROM
+        test_project_plan AS tp,
+        test_module_plan AS tm,
+        test_module_estimate AS te
+        <where>
+            tp.p_name = tm.pro_name
+            AND tp.p_name = te.pro_name
+            <if test="proName != null and proName != ''"> and tp.p_name = #{proName} </if>
+            <if test="planDate != null and planDate != ''"> and te.plan_date = #{planDate} </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by tp.plan_id ASC
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT count(*) FROM
+        test_project_plan AS tp,
+        test_module_plan AS tm,
+        test_module_estimate AS te
+        <where>
+            tp.p_name = tm.pro_name
+            AND tp.p_name = te.pro_name
+            <if test="proName != null and proName != ''"> and tp.p_name = #{proName} </if>
+            <if test="planDate != null and planDate != ''"> and te.plan_date = #{planDate} </if>
+        </where>
+    </select>
+
+</mapper>

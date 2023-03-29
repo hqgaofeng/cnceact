@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/ball.css" rel="stylesheet">
+<link href="/css/bootstrap-select.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" />
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap-select.min.js"></script>
+<script src="/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<meta charset="utf-8">
+<head th:include="include :: header">
+    <style>
+        /* 弹窗 (background) */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定定位 */
+            z-index: 1; /* 设置在顶层 */
+            left: 0;
+            top: 0;
+            width: 10%;
+            height: 10%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+ /* 弹窗 (background) */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定定位 */
+            z-index: 1; /* 设置在顶层 */
+            left: 0;
+            top: 0;
+            width: 10%;
+            height: 10%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        /* 弹窗内容 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* 关闭按钮 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .progress{
+            background: #262626;
+            border-radius: 20px;
+            height: 20px;
+            border-top: 1px solid #000;
+            box-shadow: 0 5px 4px -6px #aaa;
+            margin-top: 50px;
+            overflow: visible;
+        }
+        .progress .progress-bar{
+            border-radius: 20px;
+            position: relative;
+            animation: animate-positive 2s;
+        }
+        .progress .progress-bar:after{
+            content: "\f111";
+            font-family: fontawesome;
+            font-size: 10px;
+            color: rgba(0,0,0,0.4);
+            position: absolute;
+            top: -1px;
+            right: 10px;
+        }
+        .progress .progress-value{
+            display: block;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            padding: 3px 8px;
+            background:#191919;
+            position: absolute;
+            top: -40px;
+            right: -27px;
+        }
+        .progress .progress-value:after{
+            content: "";
+            border-top: 5px solid #191919;
+            border-left: 5px solid #191919;
+            border-bottom: 5px solid transparent ;
+            border-right: 5px solid transparent;
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+        }
+        @-webkit-keyframes animate-positive{
+            0% { width: 0%; }
+        }
+        @keyframes animate-positive{
+            0% { width: 0%; }
+        }
+        .bootstrap-select>.dropdown-toggle{
+
+        }
+        .btn-default{
+            background-color:rgb(255, 255, 255);
+        }
+    </style>
+</head>
+<body class="gray-bg" background="/img/blackground.jpg">
+
+<div class="modal fade" id="myModal9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content" style="margin-top:20%">
+            <div class="modal-body"  style="margin-left:35%">
+                当前节点不在线，请启动当前节点！！！
+            </div>
+            <div style="margin-left:45%;margin-bo:10%;margin-bottom: 5%;">
+                <button type="button"
+                        data-dismiss="modal">确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="float:right;position: absolute;margin-left: 5%; margin-top:1%;" id="instructionDiv">
+    <img src="/img/InstructionBook.png" style="width:100px;" type="button"
+         class="btn " data-toggle="modal" data-target="#myModal1">
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="false" data-keyboard="false" >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div  class="modal-content" style="width:700px;height:500px;margin-top:20%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true" >×
+                    </button>
+                    <h1 class="modal-title" id="myModalLabel1" align="center">
+                        电源开关机测试工具使用说明
+                    </h1>
+                </div>
+                <div class="modal-body" style="width:650px;height:400px; margin: 0px auto;overflow-y: scroll;">
+                    <h3>   参数说明：</h3>
+                    <h3>    1.项目名称：测试设备的项目名称</h3>
+                    <h3>    2.项目阶段：本次测试的设备的研发阶段</h3>
+                    <h3>    3.项目方案：本次测试设备的方案</h3>
+                    <h3>    4.测试工程师：本次测试的任务发起人</h3>
+                    <h3>    5.测试设备:本次测试的设备名称或者sn</h3>
+                    <h3>    6.测试时间：本次测试的日期</h3>
+                    <h3>    7.初始电平值：本次测试的初始电平值</h3>
+                    <h3>    8.UE power：Max power</h3>
+                    <h3>    9.线损：测试项目的线损</h3>
+                    <h3>    10.测试场景：下拉选择本次需要测试的场景</h3>
+                    <h3>    11.测试网络：本次测试的网络选择，2.4G或者5G或者2.4G，5G</h3>
+                    <h3>    12.测试的频段：本次测试的频段</h3>
+                    <h3>>    13.测试信道：本次测试的信道</h3>
+                    <h3>    14.设备选择：本次执行机的选择</h3>
+                    <h3>    功能简介：</h3>
+                    <h3>     开始：在所有参数填写选择完成后点击开始，完成任务下发。</h3>
+                    <h3>    查看报告：点击跳转至报告页面</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h5 align="center">工具说明书</h5>
+    </div>
+</div>
+<div class="wrapper wrapper-content " style="height: 100%; overflow: auto;width:100%" >
+    <div  style="margin-left: 250px;margin-top:50px;">
+        <div>
+            <img src="/img/pduOnOff.png" width="75" height="71.25.5" style="float:left">
+            <div style="float: left;margin-left: 80px;">
+                <font size="10">电源开关机测试自动化</font>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="ibox" style="margin-left:100px;margin-top:24px;">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pulpl-left">
+                        <fieldset>
+                            <legend>测试模式选择</legend>
+                            <fieldset>
+                                <div class="columns pull-left" style="margin-left:18px;">
+                                    <div class="form-check" style="margin-left:40px;margin-top:10px;">
+                                        <input type="radio" class="form-check-input" id="model1" name="selectModel" checked>&nbsp;&nbsp;PLC常规上下电
+                                    </div>
+                                </div>
+                                <div class="columns pull-left" style="margin-left:5px;">
+                                    <div class="form-check" style="margin-left:129px;margin-top:10px;">
+                                        <input type="radio" class="form-check-input" id="model2" name="selectModel">&nbsp;&nbsp;WIFI常规上下电
+                                    </div>
+                                </div>
+                                <div class="columns pull-left" style="margin-left:5px;">
+                                    <div class="form-check" style="margin-left:153px;margin-top:10px;">
+                                        <input type="radio" class="form-check-input" id="model3" name="selectModel">&nbsp;&nbsp;WIFI步进上电
+                                    </div>
+                                </div>
+                                <div class="columns pull-left" style="margin-left:5px;">
+                                    <div class="form-check" style="margin-left:186px;margin-top:10px;">
+                                        <input type="radio" class="form-check-input" id="model4" name="selectModel">&nbsp;&nbsp;WIFI步进下电
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ibox" style="margin-left:100px;margin-top:24px;">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="columns pulpl-left">
+                        <form>
+                            <fieldset>
+                                <legend>基础参数配置</legend>
+                                    <h3 style="margin-left:50px;margin-top:20px; float: left;" >主设备IP</h3>
+                                    <input id="hostIP" type="text" value="请输入设备IP" onFocus="if(value==defaultValue){value='';this.style.color='#000'}"
+                                           onBlur="if(!value){value=defaultValue;this.style.color='#999'}"
+                                           style="width: 150px;height:30px;float: left;margin-left:52px;margin-top: 12px"
+                                           onkeyup="this.value=value.replace(/[^\d|.]/g,'');if(this.value=='')(this.value='');"/>
+
+                                    <h3 style="margin-left:68px;margin-top:20px;float: left;" >从设备IP</h3>
+                                    <input id="slaveIP" type="text" value="请输入设备IP，多个IP用逗号分割" onFocus="if(value==defaultValue){value='';this.style.color='#000'}"
+                                           onBlur="if(!value){value=defaultValue;this.style.color='#999'}"
+                                           style="width: 450px;height:30px;float: left;margin-left:48px;margin-top: 12px"
+                                           onkeyup="this.value=value.replace(/[^\d|.]/g,'');if(this.value=='')(this.value='');"/>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="dropdown columns pull-left" style="margin-left: 170px">
+                                    <span id="warning1" style="color:red;display:none; width: 100px">请输入主设备IP</span>
+                                </div>
+
+                               <div class="dropdown columns pull-left" style="margin-left:330px;margin-top: 24px">
+                                   <span id="warning2" style="color:red;display:none;">请输入从设备IP</span>
+                               </div>
+                            </fieldset>
+                            <fieldset>                                <h3 style="margin-left:50px;margin-top:38px; float: left;" >循环次数(N)</h3>
+                                <div class="dropdown columns pull-left">
+                                    <input id="loop" type="number"  value="请输入循环次数" onFocus="if(value==defaultValue){value='';this.style.color='#000'}"
+                                           onBlur="if(!value){value=defaultValue;this.style.color='#999'}"
+                                           style="width: 150px;height:30px;float: left;margin-left:29px;margin-top: 19px"
+                                           onkeyup="this.value=value.replace(/[^\d|.]/g,'');if(this.value=='')(this.value='');"/>
+                                </div>
+
+                                <h3 style="margin-left:65px;margin-top:38px;float: left;" >测试温度</h3>
+                                <input id="temper" type="text" value="请输入测试温度" onFocus="if(value==defaultValue){value='';this.style.color='#000'}"
+                                       onBlur="if(!value){value=defaultValue;this.style.color='#999'}"
+                                       style="width: 150px;height:30px;float: left;margin-left:50px;margin-top: 29px"
+                                       onkeyup="this.value=value.replace(/[^\d|.]/g,'');if(this.value=='')(this.value='');"/>
+
+
+                                <h3 style="margin-left:50px;margin-top:28px; float: left;" >待测开关</h3>
+                                <div class="dropdown columns pull-left" style="margin-left:34px;margin-top: 24px">
+                                    <div class="dropdown bootstrap-select show-tick bs3 dropdown" style="width:150px;margin-left: 14px;">
+                                        <select id='outlet' name='outlet' class="dropdown bootstrap-select selectpicker" data-live-search="false" multiple
+                                                 style="width:200px;height:30px;" >
+                                            <option value="请选择测试开关">请选择测试开关</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="dropdown columns pull-left" style="margin-left: 170px">
+                                    <span id="warning3" style="color:red;display:none; width: 100px">请输入循环次数</span>
+                                </div>
+
+                                <div class="dropdown columns pull-left" style="margin-left:330px;margin-top: 24px">
+                                    <span id="warning4" style="color:red;display:none;">请输入测试温度</span>
+                                </div>
+
+                                <div class="dropdown columns pull-left" style="margin-left:330px;margin-top: 24px">
+                                    <span id="warning5" style="color:red;display:none;">请选择测试开关</span>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <h3 style="margin-left:50px;margin-top:38px; float: left;" >上电时间(ms)</h3>
+                                <div class="dropdown columns pull-left">
+                                    <input id="onTime" type="text" value="请输入上电时间" onFocus="if(value==defaultValue){value='';this.style.color='#000'}"
+                                           onBlur="if(!value){value=defaultValue;this.style.color='#999'}"
+                                           style="width: 150px;height:30px;float: left;margin-left:20px;margin-top: 19px"
+                                           onkeyup="this.value=value.replace(/[^\d|.]/g,'');if(this.value=='')(this.value='');"/>
+                                </div>
+                                <h3 style="margin-left:47px;margin-top:38px; float: left;" >下电时间(ms)</h3>
+                                <div class="dropdown columns pull-left">
+                                    <input id="offTime" type="text" value="请输入下电时间" onFocus="if(value==defaultValue){value='';this.style.color='#000'}"
+                                           onBlur="if(!value){value=defaultValue;this.style.color='#999'}"
+                                           style="width: 150px;height:30px;float: left;margin-left:37px;margin-top: 19px"
+                                           onkeyup="this.value=value.replace(/[^\d|.]/g,'');if(this.value=='')(this.value='');"/>
+                                </div>
+                                <h3 style="margin-left:50px;margin-top:38px;float: left;" >设备选择</h3>
+                                <div class="dropdown columns pull-left">
+                                    <select class='dropdown bootstrap-select' data-live-search="true" id='devName'
+                                            style="width:145px;height:30px;margin-left:47px;margin-top: 19px">
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="dropdown columns pull-left" style="margin-left: 170px">
+                                    <span id="warning6" style="color:red;display:none; width: 100px">请输入上电时间</span>
+                                </div>
+
+                                <div class="dropdown columns pull-left" style="margin-left:330px;margin-top: 24px">
+                                    <span id="warning7" style="color:red;display:none;">请输入上电时间</span>
+                                </div>
+
+                            </fieldset>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox" style="margin-left:100px;margin-top:16px;">
+            <div class="columns pull-left" style="width:100px;margin-left:388px;margin-top:10px;">
+                <div class="ibox-body">
+                    <div class="fixed-table-toolbar">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <button onclick="checkPwOnOffIsNull()" id="start" name="button" class="btn btn-primary" style="margin-left:2px;width:100px;">
+                                    <i aria-hidden="true"></i>开始测试</button>
+                            </div>
+                            <div class="col-xs-1">
+                                <button id="cancel" name="button" class="btn btn-danger" style="margin-left:169px;width:100px;" onclick="cancelTest();">
+                                    <i aria-hidden="true"></i>取消测试</button>
+                            </div>
+                        </div>
+                        <div class="modal fade in" id="myModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none; padding-left: 6px;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content" style="width:500px;height:300px;margin-top:20%;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel" align="center">
+                                            请仔细核对以下条件是否完成
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body" style="width: 550px; margin: 0px auto;">
+                                        <div>
+                                            <label><input name="ball" id="ball1" type="checkbox" value="0" align="center" onclick="check();">确认执行机是否在线</label>
+                                        </div>
+                                        <div>
+                                            <label><input name="ball" id="ball2" type="checkbox" value="1" align="center" onclick="check();">确认执行机是否选择正确</label>
+                                        </div>
+                                        <div>
+                                            <label><input name="ball" id="ball3" type="checkbox" value="2" align="center" onclick="check();">确认所选择执行机上的设备是否连接正常</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div style="margin-top:50px;text-align:center">
+                                            <button type="button" style="width:100px;margin-top:10px;" id="confirm" data-dismiss="modal" class="btn btn-primary" onclick="startTask();" disabled="">确定
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox" style="margin-left:100px;margin-top:120px;">
+            <div class="columns pull-left" >
+                <h3 style="margin-left:50px;margin-top:4px;float: left;" >进</h3>
+                <h3 style="margin-left:50px;margin-top:4px;float: left;" >度：</h3>
+            </div>
+            <div class="columns pull-left">
+                <div class="ibox" style="margin-left:10px;width:800px;">
+                    <div class="progress" id="progress" style="display: none;">
+                        <div id="progress_bar" class="progress-bar progress-bar-striped active" role="progressbar"
+                             style="width: 0%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);"
+                             aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-value" id="progress_value">
+                                0%
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/appjs/manager/tools/pwOnOff.js"></script>
+</body>
+</html>

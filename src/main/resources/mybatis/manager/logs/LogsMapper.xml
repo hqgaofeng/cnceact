@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.logs.dao.LogsDao">
+    <select id="getLogsInfo" resultType="com.cnce.manager.logs.domain.LogsDO">
+        SELECT id,tool_name,user_name,status,log_path,create_time
+        FROM test_log
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">and user_name = #{userName}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            and log_path = #{logPath} and log_path != null or log_path !=''
+            <if test="createTime != null and createTime != ''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by create_time desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from test_log
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">and user_name = #{userName}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            and log_path = #{logPath} and log_path != null or log_path !=''
+            <if test="createTime != null and createTime != ''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.manager.logs.domain.LogsDO" useGeneratedKeys="true" keyProperty="id">
+		insert into test_log
+		(
+			`tool_id`,
+			`tool_name`,
+			`user_id`,
+			`status`,
+			`user_name`,
+			`log_path`,
+			`create_time`
+		)
+		values
+		(
+			#{toolId},
+			#{toolName},
+			#{userId},
+			#{status},
+			#{userName},
+			#{logPath},
+			#{createTime}
+		)
+	</insert>
+	
+	<select id="getLogsPath" resultType="com.cnce.manager.logs.domain.LogsDO">
+        select log_path from test_log where id=#{value}
+    </select>
+
+
+</mapper>

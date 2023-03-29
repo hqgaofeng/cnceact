@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>修改密码</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <head th:include="system/user/include :: header"></head>
+    <![endif]-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+    <div id="wrapper" style="text-align: center">
+        <input type="hidden" id ="pwd_flag" value="1"/>
+        <div style="text-align: center;margin-top:100px">
+            <h3 style="color: red">当密码太弱或者您密码超过<span>[[${pwdLimit}]]</span>个月未变动,只有您修改密码后才能进入系统!</h3>
+            <h3 style="color: red">密码规则:包含大小写字母、数字、特殊字符，且长度在[8,40]之间</h3>
+            <br>
+        </div>
+        <div class="tab-pane" id="pwd_info">
+            <form class="gg-form" role="form" id="modifyPwd">
+                <input type="hidden" name ="userDO.userId" th:value="${user.userId}"/>
+                <div class="gg-formGroup">
+                    <div class="gg-formTitle">
+                        <em class="gg-star">&nbsp;&nbsp;&nbsp;&nbsp;*</em>
+                        <span>旧密码:</span>
+                        <input type="password" id="pwdOld" name="pwdOld" placeholder="请输入旧密码" />
+                        <span class="fa fa-eye gg-faeye" title="鼠标移入显示内容"></span>
+                    </div>
+                    <br>
+                </div>
+                <div class="gg-formGroup">
+                    <div class="gg-formTitle">
+                        <em class="gg-star">&nbsp;&nbsp;&nbsp;&nbsp;*</em>
+                        <span>新密码:</span>
+                        <input type="password" onblur="checkPwd(this)"
+                               id="pwdNew" name="pwdNew" placeholder="请输入新密码" />
+                        <span class="fa fa-eye gg-faeye" title="鼠标移入显示内容"></span>
+                    </div>
+                    <br>
+                </div>
+                <div class="gg-formGroup">
+                    <div class="gg-formTitle">
+                        <em class="gg-star">*</em>
+                        <span>确认密码:</span>
+                        <input type="password" onblur="checkPwd(this)"
+                               id="confirm_password" name="confirm_password" placeholder="请确认密码" />
+                        <span class="fa fa-eye gg-faeye" title="鼠标移入显示内容"></span>
+                    </div>
+                    <br>
+                </div>
+            </form>
+            <div class="gg-btnGroup">
+                <button type="button" class="btn btn-sm btn-primary" id="pwd_save">保存</button>
+            </div>
+        </div>
+
+    </div>
+    <div th:include="system/user/include :: footer"></div>
+    <script src="/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="/js/plugins/layer/layer.js"></script>
+    <script type="text/javascript" src="/js/appjs/sys/user/pwd.js"></script>
+
+</body>
+</html>

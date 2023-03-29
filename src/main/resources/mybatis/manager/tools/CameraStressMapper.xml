@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnce.manager.tools.dao.CameraStressTestingDao">
+
+    <select id="getModelNameByModelSort" resultType="com.cnce.manager.tools.domain.CameraStressTestingDO">
+        SELECT model_name FROM cma_model WHERE model_sort=#{value}
+    </select>
+
+    <select id="getResoNameByModelSort" resultType="com.cnce.manager.tools.domain.CameraStressTestingDO">
+        SELECT reso_name FROM cma_model_info WHERE model_sort=#{value}
+    </select>
+
+</mapper>

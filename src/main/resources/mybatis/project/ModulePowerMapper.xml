@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.module.dao.ModulePowerDao">
+    <update id="updateName" parameterType="com.cnce.project.module.domain.ModulePowerChangDO">
+        update test_module_estimate set staff_name=#{newValue} where me_id=#{id};
+
+    </update>
+
+
+    <select id="get" resultType="com.cnce.project.module.domain.ModulePowerDO">
+		select t.me_id,t.staff_name,t.pro_name,t.plan_date,t.plan_manpower,t.actual_manpower,t.change_manpower,t.remark,t.create_time
+		from test_module_estimate t
+		where t.me_id = #{value}
+	</select>
+
+    <select id="list" resultType="com.cnce.project.module.domain.ModulePowerNewDO">
+        select `me_id`,
+        mod_name,mod_power,plan_date,`create_time`
+        from test_module_estimate2
+        <where>
+            <if test="meId != null and meId != ''">and me_id = #{meId}</if>
+            <if test="modName != null and meId != ''">and mod_name = #{modName}</if>
+            <if test="modPower != null and meId != ''">and mod_power = #{modPower}</if>
+            <if test="planDate != null and meId != ''">and plan_date = #{planDate}</if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by me_id asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+<select id="list2" resultType="com.cnce.project.module.domain.ModulePowerDO">
+  select  * from test_module_estimate2
+
+</select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_module_estimate
+        <where>
+            <if test="meId != null and meId != ''"> and me_id = #{meId} </if>
+            <if test="staffName != null and staffName != ''"> and staff_name = #{staffName} </if>
+            <if test="proName != null and proName != ''"> and pro_name = #{proName} </if>
+            <if test="planDate != null and planDate != ''"> and plan_date = #{planDate} </if>
+            <if test="planManpower != null and planManpower != ''"> and plan_manpower = #{planManpower} </if>
+            <if test="actualManpower != null and actualManpower != ''"> and actual_manpower = #{actualManpower} </if>
+            <if test="changeManpower != null and changeManpower != ''"> and change_manpower = #{changeManpower} </if>
+            <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.module.domain.ModulePowerDO" useGeneratedKeys="true" keyProperty="meId">
+		insert into test_module_estimate
+		(
+		    `mod_name`,
+		    `staff_name`,
+		    `pro_name`,
+		    `plan_date`,
+		    `plan_manpower`,
+		    `actual_manpower`,
+		    `change_manpower`,
+		    `remark`,
+			`create_time`
+		)
+		values
+		(
+			#{modName},
+			#{staffName},
+			#{proName},
+			#{planDate},
+			#{planManpower},
+			#{actualManpower},
+			#{changeManpower},
+			#{remark},
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.cnce.project.module.domain.ModulePowerDO">
+        update test_module_estimate
+        <set>
+            <if test="modName != null">`mod_name` = #{modName}, </if>
+            <if test="staffName != null">`staff_name` = #{staffName}, </if>
+            <if test="proName != null">`pro_name` = #{proName}, </if>
+            <if test="planDate != null">`plan_date` = #{planDate}, </if>
+            <if test="planManpower != null">`plan_manpower` = #{planManpower}, </if>
+            <if test="actualManpower != null">`actual_manpower` = #{actualManpower}, </if>
+            <if test="changeManpower != null">`change_manpower` = #{changeManpower}, </if>
+            <if test="remark != null">`remark` = #{remark}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where me_id = #{meId}
+    </update>
+
+    <delete id="remove">
+		delete from test_module_estimate where me_id = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from test_module_estimate where me_id in
+        <foreach item="meId" collection="array" open="(" separator="," close=")">
+            #{meId}
+        </foreach>
+    </delete>
+
+    <select id="findAllName" resultType="String">
+        select distinct staff_name from test_staff
+    </select>
+
+   <select id="findAllpName" resultType="String">
+       select pName from test_project
+   </select>
+
+
+    <select id="findAllMod_name" resultType="String">
+        select mod_name from test_module_estimate
+    </select>
+
+    <select id="getModPowerByMeId" resultType="String">
+        select mod_power from test_module_estimate2 where me_id = #{id}
+    </select>
+
+    <update id="updateModPower" parameterType="com.cnce.project.module.domain.ModulePowerSaveDO">
+        update test_module_estimate2 set mod_power=#{modPower} where me_id=#{meid}
+    </update>
+
+
+</mapper>

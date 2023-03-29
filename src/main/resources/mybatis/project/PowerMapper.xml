@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cnce.project.manpower.dao.PowerDao">
+
+    <select id="list" resultType="com.cnce.project.manpower.domain.PowerDO">
+        SELECT
+        e.id,
+        u.username,
+        u.domain as deptName,
+        e.total_manpower,
+        e.non_input,
+        e.pro_manpower,
+        e.effect_month,
+        e.create_time
+        FROM
+        project_estimate AS e,
+        project_user_info AS u
+        <where>
+            e.u_id = u.user_id
+            <if test="userName != null and userName != ''"> and u.username = #{userName} </if>
+            <if test="effectMonth != null and effectMonth != ''"> and e.effect_month = #{effectMonth} </if>
+            <if test="createTime != null and createTime !=''">and e.create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by e.id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from project_estimate AS e, project_user_info AS u
+        <where>
+            e.u_id = u.user_id
+            <if test="userName != null and userName != ''"> and u.username = #{userName} </if>
+            <if test="effectMonth != null and effectMonth != ''"> and e.effect_month = #{effectMonth} </if>
+            <if test="createTime != null and createTime !=''">and e.create_time = #{createTime}</if>
+        </where>
+    </select>
+
+</mapper>

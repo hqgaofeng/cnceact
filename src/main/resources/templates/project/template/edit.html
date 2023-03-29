@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox-content">
+					<form class="form-horizontal m-t" id="signupForm">
+						<input id="proId" name="proId" th:value="${temp.proId}"
+							type="hidden">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">项目名称：</label>
+							<div class="col-sm-8">
+								<input id="pName" name="pName" class="form-control" th:value="${temp.pName}" readonly="true">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">项目归属:</label>
+							<div class="col-sm-8">
+								<input id="region" name="region" class="form-control" th:value="${temp.region}" readonly="true">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">项目级别:</label>
+							<div class="col-sm-8">
+								<label class="radio-inline">
+									<input th:field="*{temp.pLevel}" type="radio" name="pLevel" value="1" />
+									在研
+								</label>
+								<label class="radio-inline">
+									<input th:field="*{temp.pLevel}" type="radio" name="pLevel" value="2" />
+									非在研
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">月份：</label>
+							<div class="col-sm-8">
+								<input type="text" id="effectMonth" name="effectMonth"
+									   onClick="return Calendar('effectMonth');" class="form-control"
+									   th:value="${temp.effectMonth}">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-8 col-sm-offset-3">
+								<button type="submit" class="btn btn-primary">提交</button>
+								<button type="button" class="btn btn-primary" onclick="closeSelf();">关闭</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/project/template/edit.js"></script>
+	<script type="text/javascript" src="/js/appjs/manager/showdate.js"></script>
+</body>
+</html>

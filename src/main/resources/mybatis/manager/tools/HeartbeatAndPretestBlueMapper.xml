@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.tools.dao.HeartbeatAndPretestBlueDao">
+    <select id="getAllAppInfo" resultType="com.cnce.manager.tools.domain.HeartbeatAndPretestBlueDO">
+        SELECT id,name,type,status,create_time,update_time
+        FROM hebeat_case_info
+        where tool_id = 5
+        <where>
+            <if test="id != null and id != ''">and app_id = #{id}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            <if test="createTime != null and createTime != ''">and create_time = #{createTime}</if>
+            <if test="updateTime != null and updateTime != ''">and update_time = #{updateTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from hebeat_case_info where tool_id=5
+        <where>
+            <if test="id != null and id != ''">and app_id = #{id}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            <if test="createTime != null and createTime != ''">and create_time = #{createTime}</if>
+            <if test="updateTime != null and updateTime != ''">and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+</mapper>

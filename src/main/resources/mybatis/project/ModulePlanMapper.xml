@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.module.dao.ModulePlanDao">
+
+    <select id="getPlanByModuleId" resultType="com.cnce.project.module.domain.ModulePlanDO">
+        SELECT
+        `mp_id`,
+        `mid`,
+        `plan_name`,
+        `mod_power`,
+        `mod_calendar`,
+        `create_time`
+        FROM test_module_plan
+        WHERE mid = #{mId}
+        AND plan_name = #{planName}
+        order BY mp_id desc LIMIT 1
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.module.domain.ModulePlanDO" useGeneratedKeys="true" keyProperty="mpId">
+		insert into test_module_plan
+		(
+			`mid`,
+			`plan_name`,
+			`mod_power`,
+			`mod_calendar`,
+			`create_time`
+		)
+		values
+		(
+			#{mId},
+			#{planName},
+			#{modPower},
+			#{modCalendar},
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.cnce.project.module.domain.ModulePlanDO">
+        update test_module_plan
+        <set>
+            <if test="mId != null">`mid` = #{mId}, </if>
+            <if test="planName != null">`plan_name` = #{planName}, </if>
+            <if test="modPower != null">`mod_power` = #{modPower}, </if>
+            <if test="modCalendar != null">`mod_calendar` = #{modCalendar}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where mp_id = #{mpId}
+    </update>
+
+</mapper>

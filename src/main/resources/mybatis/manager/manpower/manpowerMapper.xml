@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.manpower.dao.ManpowerDao">
+
+    <select id="get" resultType="com.cnce.manager.manpower.domain.ManpowerDO">
+		select * from human_summary_info
+		where id = #{value}
+	</select>
+
+    <select id="loadTools" resultType="com.cnce.manager.manpower.domain.ManpowerDO">
+        select * from human_summary_info
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="useDept != null and useDept != ''">and use_dept = #{useDept}</if>
+            <if test="funName != null and funName != ''">and fun_name = #{funName}</if>
+            <if test="startUseTime != null and startUseTime != ''">and start_use_time = #{startUseTime}</if>
+            <if test="endUseTime != null and endUseTime != ''">and end_use_time = #{endUseTime}</if>
+            <if test="useTime != null and useTime != ''">and use_time = #{useTime}</if>
+            <if test="createTime != null and createTime != ''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from human_summary_info
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="useDept != null and useDept != ''">and use_dept = #{useDept}</if>
+            <if test="funName != null and funName != ''">and fun_name = #{funName}</if>
+            <if test="startUseTime != null and startUseTime != ''">and start_use_time = #{startUseTime}</if>
+            <if test="endUseTime != null and endUseTime != ''">and end_use_time = #{endUseTime}</if>
+            <if test="useTime != null and useTime != ''">and use_time = #{useTime}</if>
+            <if test="createTime != null and createTime != ''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.manager.manpower.domain.ManpowerDO" useGeneratedKeys="true" keyProperty="id">
+		insert into human_summary_info
+		(
+			`tool_id`,
+			`tool_name`,
+			`use_dept`,
+			`fun_name`,
+			`start_use_time`,
+			`end_use_time`,
+			`use_time`,
+			`create_time`
+		)
+		values
+		(
+			#{toolId},
+			#{toolName},
+			#{useDept},
+			#{funName},
+			#{startUseTime},
+			#{endUseTime},
+			#{useTime},
+			#{createTime}
+		)
+	</insert>
+
+    <insert id="insertList" parameterType="com.cnce.manager.manpower.domain.ManpowerDO">
+        insert into human_summary_info(tool_id,tool_name,use_dept,fun_name,start_use_time,end_use_time,use_time,create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (item.#{toolId},
+            item.#{toolName},
+            item.#{useDept},
+            item.#{funName},
+            item.#{startUseTime},
+            item.#{endUseTime},
+            item.#{useTime},
+            item.#{createTime})
+        </foreach>
+    </insert>
+
+</mapper>

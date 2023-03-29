@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.staff.dao.StaffDao">
+
+	<select id="get" resultType="com.cnce.project.staff.domain.StaffDO">
+		select t.sid,t.staff_name,t.s_group,t.property,t.job_content,t.experience,t.create_time from test_staff t
+		where t.sid = #{value}
+	</select>
+
+	<select id="loadStaff" resultType="java.lang.String">
+        select DISTINCT(staff_name) from test_staff
+    </select>
+
+	<select id="getUserByName" resultType="com.cnce.project.staff.domain.StaffDO">
+        select * from test_staff where staff_name = #{staffName} limit 1
+    </select>
+
+	<select id="list" resultType="com.cnce.project.staff.domain.StaffDO">
+		select `sid`,`staff_name`,`s_group`,`property`,`job_content`,`experience`,`create_time` from test_staff
+        <where>  
+			<if test="sId != null and sId != ''"> and sid = #{sId} </if>
+			<if test="staffName != null and staffName != ''"> and staff_name = #{staffName} </if>
+			<if test="sGroup != null and sGroup != ''"> and s_group = #{sGroup} </if>
+			<if test="property != null and property != ''"> and property = #{property} </if>
+			<if test="jobContent != null and jobContent != ''"> and job_content = #{jobContent} </if>
+			<if test="experience != null and experience != ''"> and experience = #{experience} </if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by sid asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from test_staff
+		<where>
+			<if test="sId != null and sId != ''"> and sid = #{sId} </if>
+			<if test="staffName != null and staffName != ''"> and staff_name = #{staffName} </if>
+			<if test="sGroup != null and sGroup != ''"> and s_group = #{sGroup} </if>
+			<if test="property != null and property != ''"> and property = #{property} </if>
+			<if test="jobContent != null and jobContent != ''"> and job_content = #{jobContent} </if>
+			<if test="experience != null and experience != ''"> and experience = #{experience} </if>
+			<if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cnce.project.staff.domain.StaffDO" useGeneratedKeys="true" keyProperty="sId">
+		insert into test_staff
+		(
+			`staff_name`,
+			`s_group`,
+			`property`,
+			`job_content`,
+			`experience`,
+			`create_time`
+		)
+		values
+		(
+			#{staffName},
+			#{sGroup},
+			#{property},
+			#{jobContent},
+			#{experience},
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cnce.project.staff.domain.StaffDO">
+		update test_staff
+		<set>
+			<if test="staffName != null">`staff_name` = #{staffName}, </if>
+			<if test="sGroup != null">`s_group` = #{sGroup}, </if>
+			<if test="property != null">`property` = #{property}, </if>
+			<if test="jobContent != null">`job_content` = #{jobContent}, </if>
+			<if test="experience != null">`experience` = #{experience}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where sid = #{sId}
+	</update>
+	
+	<delete id="remove">
+		delete from test_staff where sid = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from test_staff where sid in
+		<foreach item="sId" collection="array" open="(" separator="," close=")">
+			#{sId}
+		</foreach>
+	</delete>
+
+	<insert id="batchImportStaff" parameterType="java.util.List">
+		insert into test_staff (staff_name, s_group, property, job_content, experience, create_time)
+		values
+		<foreach item="item" collection="list" separator=",">
+			(
+			#{item.staffName},
+			#{item.sGroup},
+			#{item.property},
+			#{item.jobContent},
+			#{item.experience},
+			#{item.createTime}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

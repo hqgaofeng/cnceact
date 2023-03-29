@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.manager.report.dao.ReportDao">
+    <select id="getReportInfo" resultType="com.cnce.manager.report.domain.ReportDO">
+        SELECT id,tool_name,user_name,report_path,create_time
+        FROM test_report
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">and user_name = #{userName}</if>
+            and report_path = #{reportPath} and report_path != null or report_path !=''
+            <if test="createTime != null and createTime != ''">and create_time BETWEEN #{startTime} and #{endTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by create_time desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_report
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="toolId != null and toolId != ''">and tool_id = #{toolId}</if>
+            <if test="toolName != null and toolName != ''">and tool_name = #{toolName}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="userName != null and userName != ''">and user_name = #{userName}</if>
+            and report_path = #{reportPath} and report_path != null or report_path !=''
+            <if test="createTime != null and createTime != ''">and create_time BETWEEN #{startTime} and #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="getReportPath" resultType="com.cnce.manager.report.domain.ReportDO">
+         select report_path from test_report where id=#{value}
+    </select>
+    <insert id="save" parameterType="com.cnce.manager.report.domain.ReportDO" useGeneratedKeys="true" keyProperty="id">
+		insert into test_report
+		(
+			`tool_id`,
+			`tool_name`,
+			`user_id`,
+			`user_name`,
+			`report_path`,
+			`create_time`
+		)
+		values
+		(
+			#{toolId},
+			#{toolName},
+			#{userId},
+			#{userName},
+			#{reportPath},
+			#{createTime}
+		)
+	</insert>
+
+</mapper>

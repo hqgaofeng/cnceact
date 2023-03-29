@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cnce.project.project.dao.ProjectDao">
+
+    <select id="get" resultType="com.cnce.project.project.domain.ProjectDO">
+		select t.pid,t.pName,t.create_time from test_project t
+		where t.pid = #{value}
+	</select>
+
+    <select id="getProjectByName" resultType="com.cnce.project.project.domain.ProjectDO">
+        select * FROM test_project WHERE pName = #{proName}
+    </select>
+
+    <select id="loadProject" resultType="java.lang.String">
+        select DISTINCT(pName) from test_project
+    </select>
+
+    <select id="list" resultType="com.cnce.project.project.domain.ProjectDO">
+        select `pid`,`pName` as proName,`create_time` from test_project
+        <where>
+            <if test="pId != null and pId != ''"> and pid = #{pId} </if>
+            <if test="proName != null and proName != ''"> and pName = #{proName} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by pid asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from test_project
+        <where>
+            <if test="pId != null and pId != ''"> and pid = #{pId} </if>
+            <if test="proName != null and proName != ''"> and pName = #{proName} </if>
+            <if test="createTime != null and createTime !=''">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.cnce.project.project.domain.ProjectDO" useGeneratedKeys="true" keyProperty="pId">
+		insert into test_project
+		(
+			`pName`,
+			`create_time`
+		)
+		values
+		(
+			#{proName},
+			#{createTime}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.cnce.project.project.domain.ProjectDO">
+        update test_project
+        <set>
+            <if test="proName != null">`pName` = #{proName}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}</if>
+        </set>
+        where pid = #{pId}
+    </update>
+
+    <delete id="remove">
+		delete from test_project where pid = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from test_project where pid in
+        <foreach item="pId" collection="array" open="(" separator="," close=")">
+            #{pId}
+        </foreach>
+    </delete>
+
+    <insert id="batchImportProjects" parameterType="java.util.List">
+        insert into test_project (pName, create_time)
+        values
+        <foreach item="item" collection="list" separator=",">
+            (
+            #{item.proName},
+            now()
+            )
+        </foreach>
+    </insert>
+
+</mapper>

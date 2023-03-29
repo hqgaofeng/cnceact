@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<link href="/css/fileinput.min.css" rel="external nofollow">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<meta charset="utf-8">
+<head th:include="include :: header">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">工具名称：</label>
+                            <div class="col-sm-8">
+                                <select class='form-control dropdown bootstrap-select' data-live-search="true" id='toolName' name='toolName'>
+                                    <option value="null">请选择工具名称</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">验收意见：</label>
+                            <div class="col-sm-8">
+                                <input id="opinion" name="opinion" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">验收结果：</label>
+                            <div class="col-sm-8">
+                                <div class="dropdown columns pull-left">
+                                    <select class="form-control" data-live-search="true" id='accptResult' name='accptResult'>
+                                        <option value="null">请选择通过</option>
+                                        <option value="0">不通过</option>
+                                        <option value="1">通过</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">验收时间：</label>
+                            <div class="col-sm-8">
+<!--                                <input type="text" id="accptTime" value="选择时间" onClick="return Calendar('accptTime');" class="accptTime"-->
+<!--                                       style="width:150px;height:25px;">-->
+                                <input id="accptTime" name="accptTime" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="pull-left col-sm-12 col-md-6"  style="width:90%;">
+                            <div class="form-group" style="margin-left:20%">
+                                <input type="file" id="uploadfile" name="file" class="file" style="width:190px;" multiple="multiple"/>
+                                大小仅限100Mb以内
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button type="button" class="btn btn-primary" onclick="save();">提交</button>
+                                <button type="button" class="btn btn-primary" onclick="closeSelf();">关闭</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript" src="/js/appjs/manager/accpt/add.js"></script>
+<script type="text/javascript" src="/js/appjs/manager/showdate.js"></script>
+<script src="/js/fileinput.min.js"></script>
+<script src="/js/zh.js"></script>
+<script type="text/javascript">
+    $("#uploadfile").fileinput({
+        language: 'zh', //设置语言
+        uploadUrl: "/manager/require/fileUpload", //上传的地址
+        allowedFileExtensions: ['zip','rar'],//接收的文件后缀
+        uploadAsync: true, //默认异步上传
+        showUpload: true, //是否显示上传按钮
+        showRemove : false, //显示移除按钮
+        showPreview : false, //是否显示预览
+        showCaption: false,//是否显示标题
+        browseClass: "btn", //按钮样式
+        dropZoneEnabled: false,//是否显示拖拽区域
+        maxFileCount: 1, //表示允许同时上传的最大文件个数
+        enctype: 'multipart/form-data',
+        validateInitialCount:true
+    });
+</script>
+</body>
+</html>

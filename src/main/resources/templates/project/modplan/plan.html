@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header">
+</head>
+<body class="gray-bg">
+<style>
+	/*table {*/
+	/*table-layout: fixed;*/
+	/*}*/
+	.tail{
+		position: fixed;
+		top: 500px;
+		right: 0;
+		left: 0;
+		z-index:1000;
+
+		left: 35px;
+		margin-bottom: 0px;
+		overflow: hidden;
+	}
+	.page{
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		z-index:1000;
+
+		left: 35px;
+		margin-bottom: 0px;
+		overflow: hidden;
+	}
+	.index-page-a th  {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+	.index-page-a th .sortable {
+		cursor: pointer;
+		background-position: right;
+		background-repeat: no-repeat;
+		padding-right: 30px !important;
+	}
+	.index-page-a th .th-inner {
+		padding: 8px;
+		line-height: 20px;
+		vertical-align: top;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+
+
+</style>
+<div class="page" style="">
+	<div class="index-page" style="width: 100%;overflow: scroll;display: none;">
+		<table  id="page-table" style="max-width: 100000px;margin-bottom: 10px;"
+				class="table table-bordered table-hover">
+			<thead class="index-page-a" style="padding-left: 1px;display: block;">
+			</thead>
+		</table>
+	</div>
+</div>
+
+<div class="wrapper wrapper-content ">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="ibox-body">
+				<div class="fixed-table-toolbar">
+					<div class="columns pull-right">
+						<button class="btn btn-success" style="margin-left: 10px" onclick="queryData()">查询</button>
+					</div>
+					<div class="columns pull-right col-md-1 nopadding">
+						<select data-placeholder="选择模块" data-live-search="true"
+								id='modName' class="form-control chosen-select" tabindex="2" style="width: 100%">
+						</select>
+					</div>
+					<div class="columns pull-right col-md-1 nopadding">
+						<select data-placeholder="选择计划" data-live-search="true"
+								id='planName' class="form-control chosen-select" tabindex="2" style="width: 100%">
+						</select>
+					</div>
+				</div>
+				<table id="exampleTable" data-mobile-responsive="true" data-undefined-text=""></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="tail">
+	<div class="index-page" id = "tail-page"style="width: 100%;overflow: scroll;display: none;">
+		<table  id="page-table2" style="max-width: 100000px;margin-bottom: 10px;width: 3428.33px;height: 38px;"
+				class="table table-bordered table-hover">
+
+		</table>
+	</div>
+</div>
+
+
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/project/modplan/plan.js"></script>
+
+<script src="/js/plugins/bootstrap-table/1.21.2/dist/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<!--表格编辑-->
+<script type="text/javascript" src="/js/plugins/bootstrap-table/bootstrap-editable.js"></script>
+<!--表格冻结-->
+<link rel="stylesheet" href="/js/plugins/bootstrap-table/1.21.2/fixed-columns/bootstrap-table-fixed-columns.min.css" />
+<script src="/js/plugins/bootstrap-table/1.21.2/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
+
+<script>
+    jQuery.fn.wait = function (func, times, interval) {
+        var _times = times || -1, //100次
+            _interval = interval || 20, //20毫秒每次
+            _self = this,
+            _selector = this.selector, //选择器
+            _iIntervalID; //定时器id
+        if( this.length ){ //如果已经获取到了，就直接执行函数
+            func && func.call(this);
+        } else {
+            _iIntervalID = setInterval(function() {
+                if(!_times) { //是0就退出
+                    clearInterval(_iIntervalID);
+                }
+                _times <= 0 || _times--; //如果是正数就 --
+
+                _self = $(_selector); //再次选择
+                if( _self.length ) { //判断是否取到
+                    func && func.call(_self);
+                    clearInterval(_iIntervalID);
+                }
+            }, _interval);
+        }
+        return this;
+    }
+
+    var offset_top = 112;
+    $(function(){//在文档加载完毕后执行
+        console.log("111");
+        $(window).scroll(function(){//开始监听滚动条
+            var topp = $(document).scrollTop();
+            //console.log(topp);
+            if(topp > offset_top){
+                $(".index-page-a").html($("#exampleTable").children("thead").html());
+                $(".index-page").show();
+                testbind();
+                testbind3();
+            }else {
+                $(".index-page").hide();
+            }
+        })
+    })
+    window.onload = function () {
+        console.log("222");
+        $(".fixed-table-body").wait(function () { //等待#widget_my_zzk元素的加载
+            testbind();
+            var pageWidth = $(".fixed-table-container").width()
+            offset_top = $(".fixed-table-container").position().top
+            //console.log($(".fixed-table-body").offset().top);
+            $(".page").width(pageWidth);
+            var thead = $(".fixed-table-container").first(".fixed-table-body").find("thead");
+            $("#page-table").width(thead.width());
+            $("#page-table2").width(thead.width());
+            $(".page").height(thead.height()+1);
+        })
+    }
+
+    function testbind() {
+        var scroll_body;
+        var fixed_table_body = $(".fixed-table-body");
+        if (fixed_table_body.length > 1)  {
+            scroll_body = fixed_table_body.first();
+        }else {
+            scroll_body = fixed_table_body;
+        }
+        // console.log("6666");
+        scroll_body.unbind('scroll',scrollBind2);
+        scroll_body.scroll(scrollBind2)
+    }
+    function scrollBind2() {
+        $(".index-page").scrollLeft($(".fixed-table-body").scrollLeft());
+    }
+
+    //底部滚动条 $("#tail-page").scrollLeft()
+    function testbind3() {
+        var scroll_body = $("#tail-page");
+        scroll_body.unbind('scroll',scrollBind3);
+        scroll_body.scroll(scrollBind3)
+    }
+    function scrollBind3() {
+        $(".fixed-table-body").first().scrollLeft($("#tail-page").scrollLeft());
+    }
+
+    $(function(){//在文档加载完毕后执行
+        $(window).scroll(function(){//开始监听滚动条
+            var scroH = $(document).scrollTop();  //滚动高度
+            var viewH = $(window).height();  //可见高度
+            var contentH = $(document).height();  //内容高度
+            if (contentH - (scroH + viewH) <= 134){  //滚动条滑到底部啦
+                $("#tail-page").hide();
+            }else{
+                $("#tail-page").show();
+            }
+        })
+    })
+
+</script>
+</body>
+</html>

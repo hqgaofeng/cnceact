@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<!--&lt;!&ndash; 新 Bootstrap 核心 CSS 文件 &ndash;&gt;-->
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+<!--&lt;!&ndash;&lt;!&ndash; jQuery文件。务必在bootstrap.min.js 之前引入 &ndash;&gt;&ndash;&gt;-->
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+<!--&lt;!&ndash;&lt;!&ndash; 最新的 Bootstrap 核心 JavaScript 文件 &ndash;&gt;&ndash;&gt;-->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+	<div class="col-sm-12">
+		<div class="ibox">
+			<div class="ibox-body">
+				<div class="fixed-table-toolbar">
+
+					<div class="columns pull-right">
+						<button class="btn btn-success" onclick="reLoad()">查询</button>
+					</div>
+
+					<div class="columns pull-right col-md-2 nopadding">
+						<input id="modName" type="text" class="form-control"
+							   placeholder="模块名称">
+					</div>
+					<div class="columns pull-right col-md-2 nopadding">
+						<input id="planDate" name="planDate"
+							   onClick="return Calendar('planDate');" class="form-control"
+							   type="text" placeholder="日期">
+					</div>
+				</div>
+				<table id="exampleTable" data-mobile-responsive="true" style="table-layout: fixed;word-break: break-all;"></table>
+			</div>
+		</div>
+	</div>
+	<!--显示数据-->
+	<div>
+		<script type="text/javascript">
+			var s_edit_h = 'hidden';
+			var s_remove_h = 'hidden';
+		</script>
+	</div>
+	<!--姓名按钮-->
+	<div shiro:hasPermission="module:manpower:edit">
+		<script type="text/javascript">
+			s_edit_h = '';
+		</script>
+	</div>
+</div>
+
+
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/project/modpower/manpower.js"></script>
+<script type="text/javascript" src="/js/appjs/manager/showdate.js"></script>
+
+<script src="/js/plugins/bootstrap-table/1.21.2/dist/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+<!--表格编辑-->
+<script type="text/javascript" src="/js/plugins/bootstrap-table/bootstrap-editable.js"></script>
+<!--表格冻结-->
+<link rel="stylesheet" href="/js/plugins/bootstrap-table/1.21.2/fixed-columns/bootstrap-table-fixed-columns.min.css" />
+<script src="/js/plugins/bootstrap-table/1.21.2/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
+
+
+</body>
+</html>

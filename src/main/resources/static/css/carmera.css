@@ -1,0 +1,75 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            position: relative;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        .nav_1st {
+            width: 200px;
+            height: 30px;
+            line-height: 20px;
+            padding: 5px 30px 5px 5px;
+            border: 1px solid #000;
+            background: url(../img/todown.png) no-repeat center right;
+            background-size: 5%;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            margin-left: 10px;
+        }
+
+        .nav {
+            width: 200px;
+            line-height: 30px;
+            border: 1px solid #000;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            left: 0;
+            margin: auto;
+            z-index: 9999;
+            display: none;
+        }
+
+        .nav_close {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9990;
+            display: none;
+        }
+
+        .nav li input {
+            margin: 0 5px;
+        }
+
+        .nav li p:hover {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        .nav-2nd {
+            padding-left: 37px;
+        }
+
+        #classification {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
